@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Langage Ow — Documentation</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="layout">
+
+  <aside class="sidebar">
+    <h1>Ow</h1>
+    <div class="tag">Un langage de programmation au format YAML</div>
+
+    <div class="lang-switch">
+      <a href="index.html">EN</a>
+      <a href="fr.html" class="active">FR</a>
+    </div>
+
+    <nav>
+      <div class="group-title">Pour commencer</div>
+      <ul>
+        <li><a href="#overview">Aperçu</a></li>
+        <li><a href="#install">Installation et exécution</a></li>
+        <li><a href="#first">Votre premier programme</a></li>
+        <li><a href="#ide">Utiliser l'IDE</a></li>
+      </ul>
+
+      <div class="group-title">Langage</div>
+      <ul>
+        <li><a href="#shape">La forme YAML</a></li>
+        <li><a href="#comments">Commentaires</a></li>
+        <li><a href="#variables">Variables (<code>set</code>)</a></li>
+        <li><a href="#print">Affichage</a></li>
+        <li><a href="#types">Nombres et chaînes</a></li>
+        <li><a href="#operators">Opérateurs</a></li>
+        <li><a href="#if">Si / Sinon</a></li>
+        <li><a href="#while">Boucles While</a></li>
+        <li><a href="#functions">Fonctions</a></li>
+      </ul>
+
+      <div class="group-title">Référence</div>
+      <ul>
+        <li><a href="#examples">Exemples de programmes</a></li>
+        <li><a href="#errors">Erreurs courantes</a></li>
+        <li><a href="#limits">Limitations</a></li>
+        <li><a href="#cheatsheet">Aide-mémoire</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="hero">
+      <span class="pill">v1 · au format YAML</span>
+      <h1>Le Langage Ow</h1>
+      <p class="lead">Un petit langage de programmation au format YAML, avec deux façons d'exécuter votre code : un interpréteur intégré pour un retour instantané, et une véritable chaîne LLVM/clang qui produit des exécutables <code>.exe</code> natifs.</p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="downloads/OwIDE.jar" download>Télécharger Ow IDE</a>
+        <a class="button button-secondary" href="#install">Guide d'installation</a>
+      </div>
+    </div>
+
+    <!-- ============ Aperçu ============ -->
+    <section id="overview">
+      <h2>Aperçu</h2>
+      <p>Ow ressemble à du YAML, mais ce n'est pas de la configuration — c'est du code. Les instructions sont des <em>clés associées à des valeurs</em>, et les blocs sont définis par <em>l'indentation</em>, exactement comme en YAML. Les programmes contiennent toujours un bloc <code>main:</code>. Vous pouvez aussi définir des fonctions <code>fn</code> au niveau supérieur.</p>
+
+      <p>Hello, Ow :</p>
+<pre><code><span class="kw">main</span>:
+  <span class="kw">print</span>: <span class="str">"hello, ow!"</span></code></pre>
+
+      <p>Indentation de deux espaces, deux-points partout, pas d'accolades. Si vous savez écrire du YAML, vous savez écrire du Ow.</p>
+    </section>
+
+    <!-- ============ Installation ============ -->
+    <section id="install">
+      <h2>Installation et exécution</h2>
+
+      <h3>Ce qu'il vous faut</h3>
+      <ul>
+        <li><strong>Java 17+</strong> — requis pour exécuter l'IDE / le compilateur. <a href="https://adoptium.net/" target="_blank" rel="noopener">Téléchargez-le sur Adoptium</a>.</li>
+        <li><strong>clang</strong> (optionnel) — uniquement si vous souhaitez compiler des fichiers <code>.exe</code> natifs. Installez <a href="https://releases.llvm.org/" target="_blank" rel="noopener">LLVM</a> et assurez-vous que <code>clang</code> soit dans votre <code>PATH</code>.</li>
+      </ul>
+
+      <h3>Lancer l'IDE</h3>
+      <p><a class="button button-primary" href="downloads/OwIDE.jar" download>Télécharger OwIDE.jar</a></p>
+      <p>Depuis le dossier <code>target</code> du projet, double-cliquez sur <code>Run-OwIDE.bat</code>, ou exécutez depuis un terminal :</p>
+<pre><code>java -jar OwIDE.jar</code></pre>
+
+      <h3>Exécuter un fichier en ligne de commande</h3>
+<pre><code><span class="cm"># interprète un fichier .ow (clang non requis)</span>
+java -cp OwIDE.jar dev.oreo.Main --run hello.ow
+
+<span class="cm"># compile un .exe natif via LLVM/clang</span>
+java -cp OwIDE.jar dev.oreo.Main hello.ow hello.exe</code></pre>
+    </section>
+
+    <!-- ============ Premier programme ============ -->
+    <section id="first">
+      <h2>Votre premier programme</h2>
+      <p>Créez un fichier <code>hello.ow</code> avec ce contenu :</p>
+
+<pre><code><span class="kw">main</span>:
+  <span class="kw">set</span> name: <span class="str">"world"</span>
+  <span class="kw">print</span>: <span class="str">"hello, "</span> + name</code></pre>
+
+      <p>Dans l'IDE, cliquez sur <strong>Run ▶</strong>. Vous devriez voir :</p>
+<pre><code>hello, world</code></pre>
+
+      <div class="callout tip">
+        Deux façons d'exécuter : <strong>Run ▶</strong> utilise l'interpréteur (rapide, sans outils supplémentaires) — parfait pendant que vous écrivez du code. <strong>Build .exe</strong> compile via LLVM/clang en un véritable exécutable Windows que vous pouvez distribuer.
+      </div>
+    </section>
+
+    <!-- ============ Utiliser l'IDE ============ -->
+    <section id="ide">
+      <h2>Utiliser l'IDE</h2>
+      <p>L'IDE Ow est une petite application Swing qui contient tout ce qu'il faut pour écrire, exécuter et versionner votre code.</p>
+
+      <h3>Disposition</h3>
+      <ul>
+        <li><strong>Gauche — Arborescence du projet :</strong> double-cliquez sur n'importe quel fichier <code>.ow</code> pour l'ouvrir dans un onglet. Clic droit sur un dossier pour <em>Nouveau fichier</em>, <em>Nouveau dossier</em>, <em>Renommer</em> ou <em>Supprimer</em>.</li>
+        <li><strong>Centre — Onglets de l'éditeur :</strong> ouvrez autant de fichiers que vous voulez. Les onglets affichent <code>fichier.ow *</code> en cas de modifications non sauvegardées.</li>
+        <li><strong>Bas — Sortie :</strong> toute la sortie du programme, les erreurs du compilateur et la sortie des commandes Git apparaissent ici en temps réel.</li>
+      </ul>
+
+      <h3>Boutons de la barre d'outils</h3>
+      <table>
+        <tr><th>Bouton</th><th>Effet</th></tr>
+        <tr><td><code>New File</code></td><td>Crée un nouveau fichier <code>.ow</code> dans le projet ouvert</td></tr>
+        <tr><td><code>Open Folder</code></td><td>Définit un dossier comme racine du projet et affiche son contenu dans l'arbre</td></tr>
+        <tr><td><code>Save</code></td><td>Sauvegarde l'onglet actif</td></tr>
+        <tr><td><code>Run ▶</code></td><td>Interprète l'onglet actif en mémoire</td></tr>
+        <tr><td><code>Build .exe</code></td><td>Compile via LLVM/clang puis exécute le <code>.exe</code> généré</td></tr>
+        <tr><td><code>Git Status / Commit / Push</code></td><td>Opérations git en un clic dans le dossier ouvert</td></tr>
+      </table>
+
+      <h3>Menu Git</h3>
+      <p>Le workflow GitHub complet est disponible dans le menu <strong>Git</strong> :</p>
+      <ul>
+        <li><strong>Init Repo Here</strong> — <code>git init</code> dans le dossier ouvert</li>
+        <li><strong>Clone From URL…</strong> — collez n'importe quelle URL GitHub ; il clone le dépôt et l'ouvre comme votre projet</li>
+        <li><strong>Set GitHub Remote…</strong> — configure <code>origin</code> pour pouvoir pousser</li>
+        <li><strong>Configure Author…</strong> — définit <code>user.name</code> / <code>user.email</code> pour le dépôt</li>
+        <li><strong>Commit All… / Push / Pull / Status</strong> — les commandes du quotidien</li>
+      </ul>
+    </section>
+
+    <!-- ============ La forme YAML ============ -->
+    <section id="shape">
+      <h2>La forme YAML</h2>
+      <p>Ow s'appuie sur trois règles pour son apparence YAML :</p>
+      <ol>
+        <li><strong>Les instructions sont des <code>mot-clé: valeur</code>.</strong> Comme <code>set x: 5</code> ou <code>print: x</code>.</li>
+        <li><strong>Les blocs sont indentés de 2 espaces.</strong> Les tabulations ne sont pas autorisées ; le niveau d'indentation doit être un multiple de 2.</li>
+        <li><strong>Les éléments du niveau supérieur</strong> sont soit un bloc <code>main:</code> (requis, exactement un) soit un ou plusieurs blocs <code>fn nom(args):</code>.</li>
+      </ol>
+
+<pre><code><span class="cm"># un seul bloc main, déclarations fn optionnelles</span>
+<span class="kw">fn</span> <span class="fn">double</span>(n):
+  <span class="kw">return</span>: n * <span class="num">2</span>
+
+<span class="kw">main</span>:
+  <span class="kw">print</span>: <span class="fn">double</span>(<span class="num">21</span>)</code></pre>
+
+      <div class="callout warn">
+        L'indentation doit faire exactement 2 espaces par niveau. <code>4 espaces</code>, <code>1 tabulation</code> ou un nombre impair provoqueront une erreur du Lexer.
+      </div>
+    </section>
+
+    <!-- ============ Commentaires ============ -->
+    <section id="comments">
+      <h2>Commentaires</h2>
+      <p>Tout ce qui suit <code>#</code> sur une ligne est un commentaire. Ils sont autorisés partout sauf à l'intérieur d'une chaîne littérale.</p>
+<pre><code><span class="cm"># cette ligne entière est un commentaire</span>
+<span class="kw">main</span>:
+  <span class="kw">set</span> x: <span class="num">42</span>     <span class="cm"># un commentaire en fin de ligne fonctionne aussi</span>
+  <span class="kw">print</span>: <span class="str">"# ceci N'EST PAS un commentaire, c'est dans une chaîne"</span></code></pre>
+    </section>
+
+    <!-- ============ Variables ============ -->
+    <section id="variables">
+      <h2>Variables — <code>set</code></h2>
+      <p>Utilisez <code>set</code> pour créer ou mettre à jour une variable. Le premier <code>set</code> la déclare ; les <code>set</code> suivants la réassignent.</p>
+
+<pre><code><span class="kw">main</span>:
+  <span class="kw">set</span> x: <span class="num">5</span>            <span class="cm"># déclaration</span>
+  <span class="kw">set</span> x: x + <span class="num">1</span>        <span class="cm"># réassignation</span>
+  <span class="kw">print</span>: x              <span class="cm"># 6</span></code></pre>
+
+      <p>Les noms de variables se composent de <code>lettres / chiffres / _</code>, et doivent commencer par une lettre ou <code>_</code>.</p>
+
+      <div class="callout">
+        <strong>Portée :</strong> en v1, toutes les variables existent dans le bloc où elles sont définies. Les paramètres et variables locales d'une fonction restent à l'intérieur de la fonction. Il n'y a pas de variables globales.
+      </div>
+    </section>
+
+    <!-- ============ Affichage ============ -->
+    <section id="print">
+      <h2>Affichage — <code>print</code></h2>
+      <p><code>print</code> écrit son expression sur la sortie standard, suivie d'un saut de ligne.</p>
+
+<pre><code><span class="kw">main</span>:
+  <span class="kw">print</span>: <span class="num">42</span>
+  <span class="kw">print</span>: <span class="str">"hello"</span>
+  <span class="kw">print</span>: <span class="num">1</span> + <span class="num">2</span> * <span class="num">3</span>
+  <span class="kw">print</span>: <span class="str">"answer = "</span> + <span class="num">42</span></code></pre>
+      <p>Sortie :</p>
+<pre><code>42
+hello
+7
+answer = 42</code></pre>
+    </section>
+
+    <!-- ============ Types ============ -->
+    <section id="types">
+      <h2>Nombres et chaînes</h2>
+
+      <h3>Entiers</h3>
+      <p>Des nombres entiers comme <code>0</code>, <code>1</code>, <code>2025</code>. Les nombres négatifs s'écrivent <code>0 - n</code> pour le moment.</p>
+
+      <h3>Chaînes</h3>
+      <p>Du texte entre guillemets doubles. Échappements supportés :</p>
+      <table>
+        <tr><th>Échappement</th><th>Signification</th></tr>
+        <tr><td><code>\n</code></td><td>saut de ligne</td></tr>
+        <tr><td><code>\t</code></td><td>tabulation</td></tr>
+        <tr><td><code>\"</code></td><td>guillemet littéral</td></tr>
+        <tr><td><code>\\</code></td><td>barre oblique inverse</td></tr>
+      </table>
+
+<pre><code><span class="kw">main</span>:
+  <span class="kw">print</span>: <span class="str">"ligne un\nligne deux"</span>
+  <span class="kw">print</span>: <span class="str">"elle a dit \"salut\""</span></code></pre>
+
+      <h3>Chaîne + valeur</h3>
+      <p>L'opérateur <code>+</code> concatène lorsque l'un des deux côtés est une chaîne. Les nombres sont convertis automatiquement en chaîne.</p>
+<pre><code><span class="kw">main</span>:
+  <span class="kw">set</span> name: <span class="str">"ow"</span>
+  <span class="kw">set</span> n: <span class="num">3</span>
+  <span class="kw">print</span>: <span class="str">"salut "</span> + name + <span class="str">", numéro "</span> + n</code></pre>
+
+      <div class="callout warn">
+        La concaténation de chaînes fonctionne avec <strong>Run</strong> (interpréteur), mais le backend LLVM <strong>Build .exe</strong> ne supporte pour l'instant que l'affichage simple de <code>"texte"</code> — sans <code>+</code> sur les chaînes.
+      </div>
+    </section>
+
+    <!-- ============ Opérateurs ============ -->
+    <section id="operators">
+      <h2>Opérateurs</h2>
+
+      <h3>Arithmétique</h3>
+      <table>
+        <tr><th>Op</th><th>Signification</th><th>Exemple</th></tr>
+        <tr><td><code>+</code></td><td>addition (ou concaténation de chaînes)</td><td><code>1 + 2</code> → <code>3</code></td></tr>
+        <tr><td><code>-</code></td><td>soustraction</td><td><code>5 - 1</code> → <code>4</code></td></tr>
+        <tr><td><code>*</code></td><td>multiplication</td><td><code>3 * 4</code> → <code>12</code></td></tr>
+        <tr><td><code>/</code></td><td>division entière</td><td><code>7 / 2</code> → <code>3</code></td></tr>
+      </table>
+
+      <h3>Comparaison</h3>
+      <p>Les comparaisons donnent <code>1</code> (vrai) ou <code>0</code> (faux). Très utiles dans <code>if</code> et <code>while</code>.</p>
+      <table>
+        <tr><th>Op</th><th>Signification</th></tr>
+        <tr><td><code>==</code></td><td>égal</td></tr>
+        <tr><td><code>!=</code></td><td>différent</td></tr>
+        <tr><td><code>&lt;</code> &nbsp;<code>&gt;</code></td><td>strictement inférieur / supérieur</td></tr>
+        <tr><td><code>&lt;=</code> &nbsp;<code>&gt;=</code></td><td>inférieur ou égal / supérieur ou égal</td></tr>
+      </table>
+
+      <h3>Précédence</h3>
+      <ol>
+        <li><code>* /</code> ont la priorité la plus forte</li>
+        <li>puis <code>+ -</code></li>
+        <li>puis les comparaisons</li>
+      </ol>
+      <p>Utilisez des parenthèses pour modifier l'ordre : <code>(a + b) * c</code>.</p>
+    </section>
+
+    <!-- ============ Si / Sinon ============ -->
+    <section id="if">
+      <h2>Si / Sinon</h2>
+      <p>La condition suit le deux-points, et le corps est indenté de deux espaces. <code>else:</code> est optionnel et s'aligne avec <code>if:</code>.</p>
+
+<pre><code><span class="kw">main</span>:
+  <span class="kw">set</span> n: <span class="num">7</span>
+  <span class="kw">if</span>: n &gt; <span class="num">5</span>
+    <span class="kw">print</span>: <span class="str">"grand"</span>
+  <span class="kw">else</span>:
+    <span class="kw">print</span>: <span class="str">"petit"</span></code></pre>
+
+      <h3>Conditions imbriquées</h3>
+<pre><code><span class="kw">main</span>:
+  <span class="kw">set</span> n: <span class="num">0</span>
+  <span class="kw">if</span>: n &gt; <span class="num">0</span>
+    <span class="kw">print</span>: <span class="str">"positif"</span>
+  <span class="kw">else</span>:
+    <span class="kw">if</span>: n == <span class="num">0</span>
+      <span class="kw">print</span>: <span class="str">"zéro"</span>
+    <span class="kw">else</span>:
+      <span class="kw">print</span>: <span class="str">"négatif"</span></code></pre>
+
+      <p>Les conditions peuvent être une comparaison, un nombre (non-zéro = vrai), ou un appel de fonction qui retourne un nombre.</p>
+    </section>
+
+    <!-- ============ Boucles While ============ -->
+    <section id="while">
+      <h2>Boucles While</h2>
+
+<pre><code><span class="kw">main</span>:
+  <span class="kw">set</span> i: <span class="num">0</span>
+  <span class="kw">while</span>: i &lt; <span class="num">5</span>
+    <span class="kw">print</span>: i
+    <span class="kw">set</span> i: i + <span class="num">1</span></code></pre>
+
+      <p>Sortie :</p>
+<pre><code>0
+1
+2
+3
+4</code></pre>
+
+      <div class="callout">
+        Il n'y a pas de <code>break</code> ou <code>continue</code> en v1 — exprimez la même logique avec une variable de drapeau, ou refactorez avec un <code>return:</code> anticipé dans une fonction.
+      </div>
+    </section>
+
+    <!-- ============ Fonctions ============ -->
+    <section id="functions">
+      <h2>Fonctions</h2>
+
+      <h3>Déclaration</h3>
+      <p>Les fonctions se placent au niveau supérieur (en dehors de <code>main:</code>). Une fonction prend un nombre quelconque de paramètres entiers et retourne un entier avec <code>return:</code>.</p>
+
+<pre><code><span class="kw">fn</span> <span class="fn">add</span>(a, b):
+  <span class="kw">return</span>: a + b
+
+<span class="kw">main</span>:
+  <span class="kw">print</span>: <span class="fn">add</span>(<span class="num">3</span>, <span class="num">4</span>)   <span class="cm"># 7</span></code></pre>
+
+      <h3>Appel</h3>
+      <p>Deux façons d'appeler une fonction :</p>
+      <ul>
+        <li>En tant qu'expression — partout où une valeur est attendue : <code>set s: add(3, 4)</code></li>
+        <li>En tant qu'instruction — pour ignorer le résultat : <code>call: add(3, 4)</code></li>
+      </ul>
+
+      <h3>Récursion</h3>
+<pre><code><span class="kw">fn</span> <span class="fn">fact</span>(n):
+  <span class="kw">if</span>: n &lt;= <span class="num">1</span>
+    <span class="kw">return</span>: <span class="num">1</span>
+  <span class="kw">else</span>:
+    <span class="kw">return</span>: n * <span class="fn">fact</span>(n - <span class="num">1</span>)
+
+<span class="kw">main</span>:
+  <span class="kw">print</span>: <span class="fn">fact</span>(<span class="num">6</span>)   <span class="cm"># 720</span></code></pre>
+
+      <div class="callout warn">
+        Les arguments et valeurs de retour des fonctions sont uniquement des <strong>entiers</strong>. Vous pouvez utiliser des chaînes dans <code>main:</code>, mais on ne peut pas encore les passer à travers des fonctions.
+      </div>
+    </section>
+
+    <!-- ============ Exemples ============ -->
+    <section id="examples">
+      <h2>Exemples de programmes</h2>
+
+      <h3>FizzBuzz</h3>
+<pre><code><span class="kw">main</span>:
+  <span class="kw">set</span> i: <span class="num">1</span>
+  <span class="kw">while</span>: i &lt;= <span class="num">15</span>
+    <span class="kw">if</span>: (i / <span class="num">3</span>) * <span class="num">3</span> == i
+      <span class="kw">if</span>: (i / <span class="num">5</span>) * <span class="num">5</span> == i
+        <span class="kw">print</span>: <span class="str">"FizzBuzz"</span>
+      <span class="kw">else</span>:
+        <span class="kw">print</span>: <span class="str">"Fizz"</span>
+    <span class="kw">else</span>:
+      <span class="kw">if</span>: (i / <span class="num">5</span>) * <span class="num">5</span> == i
+        <span class="kw">print</span>: <span class="str">"Buzz"</span>
+      <span class="kw">else</span>:
+        <span class="kw">print</span>: i
+    <span class="kw">set</span> i: i + <span class="num">1</span></code></pre>
+
+      <h3>Fonction puissance</h3>
+<pre><code><span class="kw">fn</span> <span class="fn">pow</span>(base, exp):
+  <span class="kw">set</span> result: <span class="num">1</span>
+  <span class="kw">while</span>: exp &gt; <span class="num">0</span>
+    <span class="kw">set</span> result: result * base
+    <span class="kw">set</span> exp: exp - <span class="num">1</span>
+  <span class="kw">return</span>: result
+
+<span class="kw">main</span>:
+  <span class="kw">print</span>: <span class="fn">pow</span>(<span class="num">2</span>, <span class="num">10</span>)    <span class="cm"># 1024</span>
+  <span class="kw">print</span>: <span class="fn">pow</span>(<span class="num">3</span>, <span class="num">4</span>)     <span class="cm"># 81</span></code></pre>
+
+      <h3>PGCD (Euclide)</h3>
+<pre><code><span class="kw">fn</span> <span class="fn">gcd</span>(a, b):
+  <span class="kw">while</span>: b != <span class="num">0</span>
+    <span class="kw">set</span> t: b
+    <span class="kw">set</span> b: a - (a / b) * b
+    <span class="kw">set</span> a: t
+  <span class="kw">return</span>: a
+
+<span class="kw">main</span>:
+  <span class="kw">print</span>: <span class="fn">gcd</span>(<span class="num">462</span>, <span class="num">1071</span>)   <span class="cm"># 21</span></code></pre>
+
+      <h3>Somme 1..n</h3>
+<pre><code><span class="kw">fn</span> <span class="fn">sumTo</span>(n):
+  <span class="kw">set</span> s: <span class="num">0</span>
+  <span class="kw">set</span> i: <span class="num">1</span>
+  <span class="kw">while</span>: i &lt;= n
+    <span class="kw">set</span> s: s + i
+    <span class="kw">set</span> i: i + <span class="num">1</span>
+  <span class="kw">return</span>: s
+
+<span class="kw">main</span>:
+  <span class="kw">print</span>: <span class="str">"somme 1..100 = "</span> + <span class="fn">sumTo</span>(<span class="num">100</span>)</code></pre>
+    </section>
+
+    <!-- ============ Erreurs courantes ============ -->
+    <section id="errors">
+      <h2>Erreurs courantes et solutions</h2>
+
+      <h3>« Indentation must be a multiple of 2 spaces »</h3>
+      <p>Vous avez utilisé 1 / 3 / 4 espaces ou une tabulation. Passez à des indentations de 2 espaces.</p>
+
+      <h3>« Expected statement (set/print/if/while/return/call) »</h3>
+      <p>Chaque ligne d'un bloc doit commencer par l'un de ces mots-clés. Les expressions seules comme <code>x + 1</code> ne sont pas des instructions.</p>
+
+      <h3>« Undefined variable: x »</h3>
+      <p>Vous avez lu <code>x</code> avant son premier <code>set x: …</code>. Une variable ne peut pas être utilisée avant sa première affectation.</p>
+
+      <h3>« Unknown function: foo »</h3>
+      <p>Soit le nom est mal orthographié, soit il manque la déclaration <code>fn foo(...):</code> au-dessus de <code>main:</code>.</p>
+
+      <h3>« Build needs <code>clang</code> on PATH »</h3>
+      <p>Concerne uniquement <strong>Build .exe</strong>. <strong>Run ▶</strong> fonctionne sans clang. Pour obtenir clang, installez <a href="https://releases.llvm.org/" target="_blank" rel="noopener">LLVM</a> et redémarrez l'IDE.</p>
+    </section>
+
+    <!-- ============ Limitations ============ -->
+    <section id="limits">
+      <h2>Limitations et particularités</h2>
+      <ul>
+        <li>Un seul bloc <code>main:</code> par fichier. Plusieurs fichiers / imports ne sont pas encore supportés.</li>
+        <li>Pas encore de tableaux, dictionnaires ou objets. Les variables sont des entiers ou des chaînes.</li>
+        <li>Pas de <code>break</code> / <code>continue</code> dans les boucles.</li>
+        <li>Pas de type booléen. Utilisez <code>0</code> / non-zéro, ou des comparaisons.</li>
+        <li>Division entière uniquement — <code>7 / 2</code> vaut <code>3</code>, pas <code>3.5</code>.</li>
+        <li>Pas de bibliothèque standard — uniquement <code>print</code> et l'arithmétique.</li>
+        <li><strong>Run</strong> (interpréteur) supporte toutes les fonctionnalités. <strong>Build .exe</strong> ne supporte pas encore la concaténation de chaînes ni les chaînes à travers les fonctions.</li>
+      </ul>
+    </section>
+
+    <!-- ============ Aide-mémoire ============ -->
+    <section id="cheatsheet">
+      <h2>Aide-mémoire</h2>
+
+<pre><code><span class="cm"># littéraux</span>
+<span class="num">42</span>            <span class="cm"># entier</span>
+<span class="str">"hello"</span>       <span class="cm"># chaîne avec \n \t \" \\</span>
+
+<span class="cm"># déclaration / réassignation</span>
+<span class="kw">set</span> nom: valeur
+
+<span class="cm"># affichage</span>
+<span class="kw">print</span>: expr
+
+<span class="cm"># si / sinon</span>
+<span class="kw">if</span>: cond
+  corps
+<span class="kw">else</span>:
+  corps
+
+<span class="cm"># tant que</span>
+<span class="kw">while</span>: cond
+  corps
+
+<span class="cm"># définition de fonction (niveau supérieur)</span>
+<span class="kw">fn</span> <span class="fn">nom</span>(a, b):
+  <span class="kw">return</span>: expr
+
+<span class="cm"># appel de fonction (expression ou instruction)</span>
+<span class="kw">set</span> r: <span class="fn">nom</span>(<span class="num">1</span>, <span class="num">2</span>)
+<span class="kw">call</span>: <span class="fn">nom</span>(<span class="num">1</span>, <span class="num">2</span>)
+
+<span class="cm"># opérateurs (priorité forte → faible)</span>
+*  /        <span class="cm"># multiplication, division entière</span>
++  -        <span class="cm"># addition, soustraction (ou concaténation de chaînes)</span>
+== !=       <span class="cm"># égalité</span>
+&lt; &gt; &lt;= &gt;=   <span class="cm"># comparaison</span></code></pre>
+    </section>
+
+    <footer>
+      <p>Documentation du Langage Ow · référence sur une seule page. Le code source se trouve dans <code>src/main/java/dev/oreo/</code>.</p>
+    </footer>
+  </main>
+
+</div>
+</body>
+</html>
