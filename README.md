@@ -1,5 +1,8 @@
 # OW Language Documentation
 
+**Live site:** [ow-programing-language.github.io/owdocs](https://ow-programing-language.github.io/owdocs/)  
+**French version:** [Documentation OW en français](https://ow-programing-language.github.io/owdocs/fr.html)
+
 Official documentation site for the [OW programming language](https://github.com/OW-Programing-Language/ow-lang).
 
 The site has a searchable, mobile-friendly, **static English/French reference**.
@@ -27,7 +30,7 @@ experimental LLVM native backend.
 The published site is designed for **GitHub Pages** (pure HTML, CSS and JS;
 no Node.js process, database or paid hosting required).
 
-**Expected production URL:** <https://ow-programing-language.github.io/owdocs/>
+**Live production URL:** <https://ow-programing-language.github.io/owdocs/>
 
 1. On GitHub, open this repository's **Settings → Pages**.
 2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
