@@ -20,6 +20,32 @@ experimental LLVM native backend.
 | `scripts/validate-docs.js` | EN/FR parity, anchors and local links |
 | `scripts/server.test.js` | HTTP smoke/security checks |
 | `.github/workflows/docs.yml` | CI for docs and server tests |
+| `.github/workflows/pages.yml` | Publish static site to GitHub Pages on main |
+
+## Publish on GitHub Pages
+
+The published site is designed for **GitHub Pages** (pure HTML, CSS and JS;
+no Node.js process, database or paid hosting required).
+
+**Expected production URL:** <https://ow-programing-language.github.io/owdocs/>
+
+1. On GitHub, open this repository's **Settings → Pages**.
+2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+3. Merge the Pages deployment workflow and run **Publish OW docs to GitHub
+   Pages** from the **Actions** tab if it did not trigger automatically.
+4. Wait for the deployment job to succeed; the deployed URL appears in
+   **Settings → Pages** and the workflow's `github-pages` environment.
+
+After that, **each push to `main` publishes the site automatically**.
+The deployment workflow validates both languages and builds a minimal static
+artifact containing only `index.html`, `fr.html`, `style.css` and
+`docs.js`. Development files (`server.js`, tests and workflows) are **not**
+served publicly. Relative links and the EN/FR language switch are compatible
+with the `/owdocs/` project-site prefix.
+
+GitHub Pages supports static assets only. `server.js` is used for local
+development/testing, not production hosting. No custom domain is required,
+but one may be added later via GitHub Pages settings.
 
 ## Run locally
 
