@@ -1,0 +1,62 @@
+name: Publish OW docs to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout documentation
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js for validation
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate English and French documentation
+        run: node scripts/validate-docs.js
+
+      - name: Smoke-test local server
+        run: node --test scripts/server.test.js
+
+      - name: Assemble public static site
+        run: |
+          mkdir -p _site
+          cp index.html fr.html style.css docs.js _site/
+          touch _site/.nojekyll
+          test -s _site/index.html
+          test -s _site/fr.html
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload static website
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
