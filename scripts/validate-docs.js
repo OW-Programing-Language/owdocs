@@ -24,7 +24,14 @@ const parse = ({ name, path: filename, lang }) => {
 
   const sectionIds = [...html.matchAll(/<section class="section" id="([^"]+)"/g)]
     .map((m) => m[1]);
-  assert.ok(sectionIds.length >= 30, name + ": guide has too few topics");
+  assert.equal(sectionIds.length, 45, name + ": expected the complete 45-topic bilingual reference");
+  for (const topic of [
+    "module-advanced", "owunit-assertions", "text-utils", "numbers-time",
+    "ui-input", "runtime-spi", "web-production", "native-details",
+    "owler-workflow", "project-cookbook", "flow", "night"
+  ]) {
+    assert.ok(sectionIds.includes(topic), name + ": missing expanded chapter #" + topic);
+  }
 
   const links = [...html.matchAll(/\bhref="#([^"]+)"/g)].map((m) => m[1]);
   for (const anchor of links) {
