@@ -1,19 +1,25 @@
 # OW Language Documentation
 
+**Live site:** [ow-programing-language.github.io/owdocs](https://ow-programing-language.github.io/owdocs/)  
+**French version:** [Documentation OW en français](https://ow-programing-language.github.io/owdocs/fr.html)
+
 Official documentation site for the [OW programming language](https://github.com/OW-Programing-Language/ow-lang).
 
 The site has a searchable, mobile-friendly, **static English/French reference**.
 It covers current features from `ow-lang/main`: typed YAML syntax, OOP,
 collections, imports, modules and functors, source dependencies, OWUnit and
 exceptions, file/model storage, HTTP/desktop interfaces, packaging and the
-experimental LLVM native backend.
+experimental LLVM native backend. Its 45 bilingual sections also cover
+advanced module calculus, detailed text/math/timing APIs, OWUnit assertions,
+UI text inputs, the RuntimeExtension SPI, deployment safety, native ABI
+constraints, flOW, Night, OWler IDE workflows and example-led recipes.
 
 ## Site structure
 
 | File | Purpose |
 |---|---|
-| `index.html` | English guide (33 sections) |
-| `fr.html` | French guide (the same 33 sections and anchor IDs) |
+| `index.html` | English guide (45 sections) |
+| `fr.html` | French guide (the same 45 sections and anchor IDs) |
 | `style.css` | Responsive layout and code formatting |
 | `docs.js` | Search, mobile navigation and copy-to-clipboard buttons |
 | `server.js` | Dependency-free Node.js static host, serving `/owdocs/` |
@@ -22,12 +28,20 @@ experimental LLVM native backend.
 | `.github/workflows/docs.yml` | CI for docs and server tests |
 | `.github/workflows/pages.yml` | Publish static site to GitHub Pages on main |
 
+## Published website
+
+- [OW Documentation — English](https://ow-programing-language.github.io/owdocs/)
+- [Documentation OW — français](https://ow-programing-language.github.io/owdocs/fr.html)
+
+The documentation is published on GitHub Pages and updates automatically after
+changes to `main` are validated and deployed by GitHub Actions.
+
 ## Publish on GitHub Pages
 
 The published site is designed for **GitHub Pages** (pure HTML, CSS and JS;
 no Node.js process, database or paid hosting required).
 
-**Expected production URL:** <https://ow-programing-language.github.io/owdocs/>
+**Live production URL:** <https://ow-programing-language.github.io/owdocs/>
 
 1. On GitHub, open this repository's **Settings → Pages**.
 2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
@@ -66,7 +80,7 @@ node scripts/validate-docs.js
 node --test scripts/server.test.js
 ```
 
-Both pages must have matching section IDs and navigation targets. Never claim
+Both pages must have matching 45-section IDs and navigation targets. Never claim
 interpreter-only features work in native LLVM: describe the compiled subset
 and link the relevant guide in `ow-lang/docs/`.
 
