@@ -1,500 +1,226 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Langage Ow — Documentation</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-<div class="layout">
-
-  <aside class="sidebar">
-    <h1>Ow</h1>
-    <div class="tag">Un langage de programmation au format YAML</div>
-
-    <div class="lang-switch">
-      <a href="index.html">EN</a>
-      <a href="fr.html" class="active">FR</a>
-    </div>
-
-    <nav>
-      <div class="group-title">Pour commencer</div>
-      <ul>
-        <li><a href="#overview">Aperçu</a></li>
-        <li><a href="#install">Installation et exécution</a></li>
-        <li><a href="#first">Votre premier programme</a></li>
-        <li><a href="#ide">Utiliser l'IDE</a></li>
-      </ul>
-
-      <div class="group-title">Langage</div>
-      <ul>
-        <li><a href="#shape">La forme YAML</a></li>
-        <li><a href="#comments">Commentaires</a></li>
-        <li><a href="#variables">Variables (<code>set</code>)</a></li>
-        <li><a href="#print">Affichage</a></li>
-        <li><a href="#types">Nombres et chaînes</a></li>
-        <li><a href="#operators">Opérateurs</a></li>
-        <li><a href="#if">Si / Sinon</a></li>
-        <li><a href="#while">Boucles While</a></li>
-        <li><a href="#functions">Fonctions</a></li>
-      </ul>
-
-      <div class="group-title">Référence</div>
-      <ul>
-        <li><a href="#examples">Exemples de programmes</a></li>
-        <li><a href="#errors">Erreurs courantes</a></li>
-        <li><a href="#limits">Limitations</a></li>
-        <li><a href="#cheatsheet">Aide-mémoire</a></li>
-      </ul>
-    </nav>
-  </aside>
-
-  <main>
-    <div class="hero">
-      <span class="pill">v1 · au format YAML</span>
-      <h1>Le Langage Ow</h1>
-      <p class="lead">Un petit langage de programmation au format YAML, avec deux façons d'exécuter votre code : un interpréteur intégré pour un retour instantané, et une véritable chaîne LLVM/clang qui produit des exécutables <code>.exe</code> natifs.</p>
-      <div class="hero-actions">
-        <a class="button button-primary" href="downloads/OwIDE.jar" download>Télécharger Ow IDE</a>
-        <a class="button button-secondary" href="#install">Guide d'installation</a>
-      </div>
-    </div>
-
-    <!-- ============ Aperçu ============ -->
-    <section id="overview">
-      <h2>Aperçu</h2>
-      <p>Ow ressemble à du YAML, mais ce n'est pas de la configuration — c'est du code. Les instructions sont des <em>clés associées à des valeurs</em>, et les blocs sont définis par <em>l'indentation</em>, exactement comme en YAML. Les programmes contiennent toujours un bloc <code>main:</code>. Vous pouvez aussi définir des fonctions <code>fn</code> au niveau supérieur.</p>
-
-      <p>Hello, Ow :</p>
-<pre><code><span class="kw">main</span>:
-  <span class="kw">print</span>: <span class="str">"hello, ow!"</span></code></pre>
-
-      <p>Indentation de deux espaces, deux-points partout, pas d'accolades. Si vous savez écrire du YAML, vous savez écrire du Ow.</p>
-    </section>
-
-    <!-- ============ Installation ============ -->
-    <section id="install">
-      <h2>Installation et exécution</h2>
-
-      <h3>Ce qu'il vous faut</h3>
-      <ul>
-        <li><strong>Java 17+</strong> — requis pour exécuter l'IDE / le compilateur. <a href="https://adoptium.net/" target="_blank" rel="noopener">Téléchargez-le sur Adoptium</a>.</li>
-        <li><strong>clang</strong> (optionnel) — uniquement si vous souhaitez compiler des fichiers <code>.exe</code> natifs. Installez <a href="https://releases.llvm.org/" target="_blank" rel="noopener">LLVM</a> et assurez-vous que <code>clang</code> soit dans votre <code>PATH</code>.</li>
-      </ul>
-
-      <h3>Lancer l'IDE</h3>
-      <p><a class="button button-primary" href="downloads/OwIDE.jar" download>Télécharger OwIDE.jar</a></p>
-      <p>Depuis le dossier <code>target</code> du projet, double-cliquez sur <code>Run-OwIDE.bat</code>, ou exécutez depuis un terminal :</p>
-<pre><code>java -jar OwIDE.jar</code></pre>
-
-      <h3>Exécuter un fichier en ligne de commande</h3>
-<pre><code><span class="cm"># interprète un fichier .ow (clang non requis)</span>
-java -cp OwIDE.jar dev.oreo.Main --run hello.ow
-
-<span class="cm"># compile un .exe natif via LLVM/clang</span>
-java -cp OwIDE.jar dev.oreo.Main hello.ow hello.exe</code></pre>
-    </section>
-
-    <!-- ============ Premier programme ============ -->
-    <section id="first">
-      <h2>Votre premier programme</h2>
-      <p>Créez un fichier <code>hello.ow</code> avec ce contenu :</p>
-
-<pre><code><span class="kw">main</span>:
-  <span class="kw">set</span> name: <span class="str">"world"</span>
-  <span class="kw">print</span>: <span class="str">"hello, "</span> + name</code></pre>
-
-      <p>Dans l'IDE, cliquez sur <strong>Run ▶</strong>. Vous devriez voir :</p>
-<pre><code>hello, world</code></pre>
-
-      <div class="callout tip">
-        Deux façons d'exécuter : <strong>Run ▶</strong> utilise l'interpréteur (rapide, sans outils supplémentaires) — parfait pendant que vous écrivez du code. <strong>Build .exe</strong> compile via LLVM/clang en un véritable exécutable Windows que vous pouvez distribuer.
-      </div>
-    </section>
-
-    <!-- ============ Utiliser l'IDE ============ -->
-    <section id="ide">
-      <h2>Utiliser l'IDE</h2>
-      <p>L'IDE Ow est une petite application Swing qui contient tout ce qu'il faut pour écrire, exécuter et versionner votre code.</p>
-
-      <h3>Disposition</h3>
-      <ul>
-        <li><strong>Gauche — Arborescence du projet :</strong> double-cliquez sur n'importe quel fichier <code>.ow</code> pour l'ouvrir dans un onglet. Clic droit sur un dossier pour <em>Nouveau fichier</em>, <em>Nouveau dossier</em>, <em>Renommer</em> ou <em>Supprimer</em>.</li>
-        <li><strong>Centre — Onglets de l'éditeur :</strong> ouvrez autant de fichiers que vous voulez. Les onglets affichent <code>fichier.ow *</code> en cas de modifications non sauvegardées.</li>
-        <li><strong>Bas — Sortie :</strong> toute la sortie du programme, les erreurs du compilateur et la sortie des commandes Git apparaissent ici en temps réel.</li>
-      </ul>
-
-      <h3>Boutons de la barre d'outils</h3>
-      <table>
-        <tr><th>Bouton</th><th>Effet</th></tr>
-        <tr><td><code>New File</code></td><td>Crée un nouveau fichier <code>.ow</code> dans le projet ouvert</td></tr>
-        <tr><td><code>Open Folder</code></td><td>Définit un dossier comme racine du projet et affiche son contenu dans l'arbre</td></tr>
-        <tr><td><code>Save</code></td><td>Sauvegarde l'onglet actif</td></tr>
-        <tr><td><code>Run ▶</code></td><td>Interprète l'onglet actif en mémoire</td></tr>
-        <tr><td><code>Build .exe</code></td><td>Compile via LLVM/clang puis exécute le <code>.exe</code> généré</td></tr>
-        <tr><td><code>Git Status / Commit / Push</code></td><td>Opérations git en un clic dans le dossier ouvert</td></tr>
-      </table>
-
-      <h3>Menu Git</h3>
-      <p>Le workflow GitHub complet est disponible dans le menu <strong>Git</strong> :</p>
-      <ul>
-        <li><strong>Init Repo Here</strong> — <code>git init</code> dans le dossier ouvert</li>
-        <li><strong>Clone From URL…</strong> — collez n'importe quelle URL GitHub ; il clone le dépôt et l'ouvre comme votre projet</li>
-        <li><strong>Set GitHub Remote…</strong> — configure <code>origin</code> pour pouvoir pousser</li>
-        <li><strong>Configure Author…</strong> — définit <code>user.name</code> / <code>user.email</code> pour le dépôt</li>
-        <li><strong>Commit All… / Push / Pull / Status</strong> — les commandes du quotidien</li>
-      </ul>
-    </section>
-
-    <!-- ============ La forme YAML ============ -->
-    <section id="shape">
-      <h2>La forme YAML</h2>
-      <p>Ow s'appuie sur trois règles pour son apparence YAML :</p>
-      <ol>
-        <li><strong>Les instructions sont des <code>mot-clé: valeur</code>.</strong> Comme <code>set x: 5</code> ou <code>print: x</code>.</li>
-        <li><strong>Les blocs sont indentés de 2 espaces.</strong> Les tabulations ne sont pas autorisées ; le niveau d'indentation doit être un multiple de 2.</li>
-        <li><strong>Les éléments du niveau supérieur</strong> sont soit un bloc <code>main:</code> (requis, exactement un) soit un ou plusieurs blocs <code>fn nom(args):</code>.</li>
-      </ol>
-
-<pre><code><span class="cm"># un seul bloc main, déclarations fn optionnelles</span>
-<span class="kw">fn</span> <span class="fn">double</span>(n):
-  <span class="kw">return</span>: n * <span class="num">2</span>
-
-<span class="kw">main</span>:
-  <span class="kw">print</span>: <span class="fn">double</span>(<span class="num">21</span>)</code></pre>
-
-      <div class="callout warn">
-        L'indentation doit faire exactement 2 espaces par niveau. <code>4 espaces</code>, <code>1 tabulation</code> ou un nombre impair provoqueront une erreur du Lexer.
-      </div>
-    </section>
-
-    <!-- ============ Commentaires ============ -->
-    <section id="comments">
-      <h2>Commentaires</h2>
-      <p>Tout ce qui suit <code>#</code> sur une ligne est un commentaire. Ils sont autorisés partout sauf à l'intérieur d'une chaîne littérale.</p>
-<pre><code><span class="cm"># cette ligne entière est un commentaire</span>
-<span class="kw">main</span>:
-  <span class="kw">set</span> x: <span class="num">42</span>     <span class="cm"># un commentaire en fin de ligne fonctionne aussi</span>
-  <span class="kw">print</span>: <span class="str">"# ceci N'EST PAS un commentaire, c'est dans une chaîne"</span></code></pre>
-    </section>
-
-    <!-- ============ Variables ============ -->
-    <section id="variables">
-      <h2>Variables — <code>set</code></h2>
-      <p>Utilisez <code>set</code> pour créer ou mettre à jour une variable. Le premier <code>set</code> la déclare ; les <code>set</code> suivants la réassignent.</p>
-
-<pre><code><span class="kw">main</span>:
-  <span class="kw">set</span> x: <span class="num">5</span>            <span class="cm"># déclaration</span>
-  <span class="kw">set</span> x: x + <span class="num">1</span>        <span class="cm"># réassignation</span>
-  <span class="kw">print</span>: x              <span class="cm"># 6</span></code></pre>
-
-      <p>Les noms de variables se composent de <code>lettres / chiffres / _</code>, et doivent commencer par une lettre ou <code>_</code>.</p>
-
-      <div class="callout">
-        <strong>Portée :</strong> en v1, toutes les variables existent dans le bloc où elles sont définies. Les paramètres et variables locales d'une fonction restent à l'intérieur de la fonction. Il n'y a pas de variables globales.
-      </div>
-    </section>
-
-    <!-- ============ Affichage ============ -->
-    <section id="print">
-      <h2>Affichage — <code>print</code></h2>
-      <p><code>print</code> écrit son expression sur la sortie standard, suivie d'un saut de ligne.</p>
-
-<pre><code><span class="kw">main</span>:
-  <span class="kw">print</span>: <span class="num">42</span>
-  <span class="kw">print</span>: <span class="str">"hello"</span>
-  <span class="kw">print</span>: <span class="num">1</span> + <span class="num">2</span> * <span class="num">3</span>
-  <span class="kw">print</span>: <span class="str">"answer = "</span> + <span class="num">42</span></code></pre>
-      <p>Sortie :</p>
-<pre><code>42
-hello
-7
-answer = 42</code></pre>
-    </section>
-
-    <!-- ============ Types ============ -->
-    <section id="types">
-      <h2>Nombres et chaînes</h2>
-
-      <h3>Entiers</h3>
-      <p>Des nombres entiers comme <code>0</code>, <code>1</code>, <code>2025</code>. Les nombres négatifs s'écrivent <code>0 - n</code> pour le moment.</p>
-
-      <h3>Chaînes</h3>
-      <p>Du texte entre guillemets doubles. Échappements supportés :</p>
-      <table>
-        <tr><th>Échappement</th><th>Signification</th></tr>
-        <tr><td><code>\n</code></td><td>saut de ligne</td></tr>
-        <tr><td><code>\t</code></td><td>tabulation</td></tr>
-        <tr><td><code>\"</code></td><td>guillemet littéral</td></tr>
-        <tr><td><code>\\</code></td><td>barre oblique inverse</td></tr>
-      </table>
-
-<pre><code><span class="kw">main</span>:
-  <span class="kw">print</span>: <span class="str">"ligne un\nligne deux"</span>
-  <span class="kw">print</span>: <span class="str">"elle a dit \"salut\""</span></code></pre>
-
-      <h3>Chaîne + valeur</h3>
-      <p>L'opérateur <code>+</code> concatène lorsque l'un des deux côtés est une chaîne. Les nombres sont convertis automatiquement en chaîne.</p>
-<pre><code><span class="kw">main</span>:
-  <span class="kw">set</span> name: <span class="str">"ow"</span>
-  <span class="kw">set</span> n: <span class="num">3</span>
-  <span class="kw">print</span>: <span class="str">"salut "</span> + name + <span class="str">", numéro "</span> + n</code></pre>
-
-      <div class="callout warn">
-        La concaténation de chaînes fonctionne avec <strong>Run</strong> (interpréteur), mais le backend LLVM <strong>Build .exe</strong> ne supporte pour l'instant que l'affichage simple de <code>"texte"</code> — sans <code>+</code> sur les chaînes.
-      </div>
-    </section>
-
-    <!-- ============ Opérateurs ============ -->
-    <section id="operators">
-      <h2>Opérateurs</h2>
-
-      <h3>Arithmétique</h3>
-      <table>
-        <tr><th>Op</th><th>Signification</th><th>Exemple</th></tr>
-        <tr><td><code>+</code></td><td>addition (ou concaténation de chaînes)</td><td><code>1 + 2</code> → <code>3</code></td></tr>
-        <tr><td><code>-</code></td><td>soustraction</td><td><code>5 - 1</code> → <code>4</code></td></tr>
-        <tr><td><code>*</code></td><td>multiplication</td><td><code>3 * 4</code> → <code>12</code></td></tr>
-        <tr><td><code>/</code></td><td>division entière</td><td><code>7 / 2</code> → <code>3</code></td></tr>
-      </table>
-
-      <h3>Comparaison</h3>
-      <p>Les comparaisons donnent <code>1</code> (vrai) ou <code>0</code> (faux). Très utiles dans <code>if</code> et <code>while</code>.</p>
-      <table>
-        <tr><th>Op</th><th>Signification</th></tr>
-        <tr><td><code>==</code></td><td>égal</td></tr>
-        <tr><td><code>!=</code></td><td>différent</td></tr>
-        <tr><td><code>&lt;</code> &nbsp;<code>&gt;</code></td><td>strictement inférieur / supérieur</td></tr>
-        <tr><td><code>&lt;=</code> &nbsp;<code>&gt;=</code></td><td>inférieur ou égal / supérieur ou égal</td></tr>
-      </table>
-
-      <h3>Précédence</h3>
-      <ol>
-        <li><code>* /</code> ont la priorité la plus forte</li>
-        <li>puis <code>+ -</code></li>
-        <li>puis les comparaisons</li>
-      </ol>
-      <p>Utilisez des parenthèses pour modifier l'ordre : <code>(a + b) * c</code>.</p>
-    </section>
-
-    <!-- ============ Si / Sinon ============ -->
-    <section id="if">
-      <h2>Si / Sinon</h2>
-      <p>La condition suit le deux-points, et le corps est indenté de deux espaces. <code>else:</code> est optionnel et s'aligne avec <code>if:</code>.</p>
-
-<pre><code><span class="kw">main</span>:
-  <span class="kw">set</span> n: <span class="num">7</span>
-  <span class="kw">if</span>: n &gt; <span class="num">5</span>
-    <span class="kw">print</span>: <span class="str">"grand"</span>
-  <span class="kw">else</span>:
-    <span class="kw">print</span>: <span class="str">"petit"</span></code></pre>
-
-      <h3>Conditions imbriquées</h3>
-<pre><code><span class="kw">main</span>:
-  <span class="kw">set</span> n: <span class="num">0</span>
-  <span class="kw">if</span>: n &gt; <span class="num">0</span>
-    <span class="kw">print</span>: <span class="str">"positif"</span>
-  <span class="kw">else</span>:
-    <span class="kw">if</span>: n == <span class="num">0</span>
-      <span class="kw">print</span>: <span class="str">"zéro"</span>
-    <span class="kw">else</span>:
-      <span class="kw">print</span>: <span class="str">"négatif"</span></code></pre>
-
-      <p>Les conditions peuvent être une comparaison, un nombre (non-zéro = vrai), ou un appel de fonction qui retourne un nombre.</p>
-    </section>
-
-    <!-- ============ Boucles While ============ -->
-    <section id="while">
-      <h2>Boucles While</h2>
-
-<pre><code><span class="kw">main</span>:
-  <span class="kw">set</span> i: <span class="num">0</span>
-  <span class="kw">while</span>: i &lt; <span class="num">5</span>
-    <span class="kw">print</span>: i
-    <span class="kw">set</span> i: i + <span class="num">1</span></code></pre>
-
-      <p>Sortie :</p>
-<pre><code>0
-1
-2
-3
-4</code></pre>
-
-      <div class="callout">
-        Il n'y a pas de <code>break</code> ou <code>continue</code> en v1 — exprimez la même logique avec une variable de drapeau, ou refactorez avec un <code>return:</code> anticipé dans une fonction.
-      </div>
-    </section>
-
-    <!-- ============ Fonctions ============ -->
-    <section id="functions">
-      <h2>Fonctions</h2>
-
-      <h3>Déclaration</h3>
-      <p>Les fonctions se placent au niveau supérieur (en dehors de <code>main:</code>). Une fonction prend un nombre quelconque de paramètres entiers et retourne un entier avec <code>return:</code>.</p>
-
-<pre><code><span class="kw">fn</span> <span class="fn">add</span>(a, b):
-  <span class="kw">return</span>: a + b
-
-<span class="kw">main</span>:
-  <span class="kw">print</span>: <span class="fn">add</span>(<span class="num">3</span>, <span class="num">4</span>)   <span class="cm"># 7</span></code></pre>
-
-      <h3>Appel</h3>
-      <p>Deux façons d'appeler une fonction :</p>
-      <ul>
-        <li>En tant qu'expression — partout où une valeur est attendue : <code>set s: add(3, 4)</code></li>
-        <li>En tant qu'instruction — pour ignorer le résultat : <code>call: add(3, 4)</code></li>
-      </ul>
-
-      <h3>Récursion</h3>
-<pre><code><span class="kw">fn</span> <span class="fn">fact</span>(n):
-  <span class="kw">if</span>: n &lt;= <span class="num">1</span>
-    <span class="kw">return</span>: <span class="num">1</span>
-  <span class="kw">else</span>:
-    <span class="kw">return</span>: n * <span class="fn">fact</span>(n - <span class="num">1</span>)
-
-<span class="kw">main</span>:
-  <span class="kw">print</span>: <span class="fn">fact</span>(<span class="num">6</span>)   <span class="cm"># 720</span></code></pre>
-
-      <div class="callout warn">
-        Les arguments et valeurs de retour des fonctions sont uniquement des <strong>entiers</strong>. Vous pouvez utiliser des chaînes dans <code>main:</code>, mais on ne peut pas encore les passer à travers des fonctions.
-      </div>
-    </section>
-
-    <!-- ============ Exemples ============ -->
-    <section id="examples">
-      <h2>Exemples de programmes</h2>
-
-      <h3>FizzBuzz</h3>
-<pre><code><span class="kw">main</span>:
-  <span class="kw">set</span> i: <span class="num">1</span>
-  <span class="kw">while</span>: i &lt;= <span class="num">15</span>
-    <span class="kw">if</span>: (i / <span class="num">3</span>) * <span class="num">3</span> == i
-      <span class="kw">if</span>: (i / <span class="num">5</span>) * <span class="num">5</span> == i
-        <span class="kw">print</span>: <span class="str">"FizzBuzz"</span>
-      <span class="kw">else</span>:
-        <span class="kw">print</span>: <span class="str">"Fizz"</span>
-    <span class="kw">else</span>:
-      <span class="kw">if</span>: (i / <span class="num">5</span>) * <span class="num">5</span> == i
-        <span class="kw">print</span>: <span class="str">"Buzz"</span>
-      <span class="kw">else</span>:
-        <span class="kw">print</span>: i
-    <span class="kw">set</span> i: i + <span class="num">1</span></code></pre>
-
-      <h3>Fonction puissance</h3>
-<pre><code><span class="kw">fn</span> <span class="fn">pow</span>(base, exp):
-  <span class="kw">set</span> result: <span class="num">1</span>
-  <span class="kw">while</span>: exp &gt; <span class="num">0</span>
-    <span class="kw">set</span> result: result * base
-    <span class="kw">set</span> exp: exp - <span class="num">1</span>
-  <span class="kw">return</span>: result
-
-<span class="kw">main</span>:
-  <span class="kw">print</span>: <span class="fn">pow</span>(<span class="num">2</span>, <span class="num">10</span>)    <span class="cm"># 1024</span>
-  <span class="kw">print</span>: <span class="fn">pow</span>(<span class="num">3</span>, <span class="num">4</span>)     <span class="cm"># 81</span></code></pre>
-
-      <h3>PGCD (Euclide)</h3>
-<pre><code><span class="kw">fn</span> <span class="fn">gcd</span>(a, b):
-  <span class="kw">while</span>: b != <span class="num">0</span>
-    <span class="kw">set</span> t: b
-    <span class="kw">set</span> b: a - (a / b) * b
-    <span class="kw">set</span> a: t
-  <span class="kw">return</span>: a
-
-<span class="kw">main</span>:
-  <span class="kw">print</span>: <span class="fn">gcd</span>(<span class="num">462</span>, <span class="num">1071</span>)   <span class="cm"># 21</span></code></pre>
-
-      <h3>Somme 1..n</h3>
-<pre><code><span class="kw">fn</span> <span class="fn">sumTo</span>(n):
-  <span class="kw">set</span> s: <span class="num">0</span>
-  <span class="kw">set</span> i: <span class="num">1</span>
-  <span class="kw">while</span>: i &lt;= n
-    <span class="kw">set</span> s: s + i
-    <span class="kw">set</span> i: i + <span class="num">1</span>
-  <span class="kw">return</span>: s
-
-<span class="kw">main</span>:
-  <span class="kw">print</span>: <span class="str">"somme 1..100 = "</span> + <span class="fn">sumTo</span>(<span class="num">100</span>)</code></pre>
-    </section>
-
-    <!-- ============ Erreurs courantes ============ -->
-    <section id="errors">
-      <h2>Erreurs courantes et solutions</h2>
-
-      <h3>« Indentation must be a multiple of 2 spaces »</h3>
-      <p>Vous avez utilisé 1 / 3 / 4 espaces ou une tabulation. Passez à des indentations de 2 espaces.</p>
-
-      <h3>« Expected statement (set/print/if/while/return/call) »</h3>
-      <p>Chaque ligne d'un bloc doit commencer par l'un de ces mots-clés. Les expressions seules comme <code>x + 1</code> ne sont pas des instructions.</p>
-
-      <h3>« Undefined variable: x »</h3>
-      <p>Vous avez lu <code>x</code> avant son premier <code>set x: …</code>. Une variable ne peut pas être utilisée avant sa première affectation.</p>
-
-      <h3>« Unknown function: foo »</h3>
-      <p>Soit le nom est mal orthographié, soit il manque la déclaration <code>fn foo(...):</code> au-dessus de <code>main:</code>.</p>
-
-      <h3>« Build needs <code>clang</code> on PATH »</h3>
-      <p>Concerne uniquement <strong>Build .exe</strong>. <strong>Run ▶</strong> fonctionne sans clang. Pour obtenir clang, installez <a href="https://releases.llvm.org/" target="_blank" rel="noopener">LLVM</a> et redémarrez l'IDE.</p>
-    </section>
-
-    <!-- ============ Limitations ============ -->
-    <section id="limits">
-      <h2>Limitations et particularités</h2>
-      <ul>
-        <li>Un seul bloc <code>main:</code> par fichier. Plusieurs fichiers / imports ne sont pas encore supportés.</li>
-        <li>Pas encore de tableaux, dictionnaires ou objets. Les variables sont des entiers ou des chaînes.</li>
-        <li>Pas de <code>break</code> / <code>continue</code> dans les boucles.</li>
-        <li>Pas de type booléen. Utilisez <code>0</code> / non-zéro, ou des comparaisons.</li>
-        <li>Division entière uniquement — <code>7 / 2</code> vaut <code>3</code>, pas <code>3.5</code>.</li>
-        <li>Pas de bibliothèque standard — uniquement <code>print</code> et l'arithmétique.</li>
-        <li><strong>Run</strong> (interpréteur) supporte toutes les fonctionnalités. <strong>Build .exe</strong> ne supporte pas encore la concaténation de chaînes ni les chaînes à travers les fonctions.</li>
-      </ul>
-    </section>
-
-    <!-- ============ Aide-mémoire ============ -->
-    <section id="cheatsheet">
-      <h2>Aide-mémoire</h2>
-
-<pre><code><span class="cm"># littéraux</span>
-<span class="num">42</span>            <span class="cm"># entier</span>
-<span class="str">"hello"</span>       <span class="cm"># chaîne avec \n \t \" \\</span>
-
-<span class="cm"># déclaration / réassignation</span>
-<span class="kw">set</span> nom: valeur
-
-<span class="cm"># affichage</span>
-<span class="kw">print</span>: expr
-
-<span class="cm"># si / sinon</span>
-<span class="kw">if</span>: cond
-  corps
-<span class="kw">else</span>:
-  corps
-
-<span class="cm"># tant que</span>
-<span class="kw">while</span>: cond
-  corps
-
-<span class="cm"># définition de fonction (niveau supérieur)</span>
-<span class="kw">fn</span> <span class="fn">nom</span>(a, b):
-  <span class="kw">return</span>: expr
-
-<span class="cm"># appel de fonction (expression ou instruction)</span>
-<span class="kw">set</span> r: <span class="fn">nom</span>(<span class="num">1</span>, <span class="num">2</span>)
-<span class="kw">call</span>: <span class="fn">nom</span>(<span class="num">1</span>, <span class="num">2</span>)
-
-<span class="cm"># opérateurs (priorité forte → faible)</span>
-*  /        <span class="cm"># multiplication, division entière</span>
-+  -        <span class="cm"># addition, soustraction (ou concaténation de chaînes)</span>
-== !=       <span class="cm"># égalité</span>
-&lt; &gt; &lt;= &gt;=   <span class="cm"># comparaison</span></code></pre>
-    </section>
-
-    <footer>
-      <p>Documentation du Langage Ow · référence sur une seule page. Le code source se trouve dans <code>src/main/java/dev/oreo/</code>.</p>
-    </footer>
-  </main>
-
-</div>
-</body>
-</html>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Documentation complète du langage OW : syntaxe, objets, modules, OWUnit, dépendances, interfaces et compilation native LLVM expérimentale."><title>Langage OW — Documentation complète</title><link rel="stylesheet" href="style.css"></head><body><div class="layout">
+<aside class="sidebar" data-open="false"><a class="brand" href="#overview"><span class="brand-mark">OW</span><span><strong>Langage OW</strong><small>Documentation développeur</small></span></a><button type="button" id="mobile-toggle" class="mobile-toggle" aria-controls="docs-nav" aria-expanded="false">☰ Menu</button><div class="side-controls"><div class="lang-switch" aria-label="Langue"><a data-language-switch href="index.html" lang="en">English</a><a class="active" href="fr.html" lang="fr" aria-current="page">Français</a></div><input type="search" class="search" id="docs-search" placeholder="Rechercher… /" aria-label="Rechercher dans la documentation" autocomplete="off"></div><nav id="docs-nav" aria-label="Sommaire de la documentation"><div class="nav-group"><h2>Pour commencer</h2><ul><li><a href="#overview">Présentation</a></li><li><a href="#install">Installation</a></li><li><a href="#quickstart">Premier programme</a></li><li><a href="#cli">Référence de la CLI</a></li></ul></div><div class="nav-group"><h2>Langage</h2><ul><li><a href="#syntax">Syntaxe et indentation</a></li><li><a href="#types">Types, variables et calculs</a></li><li><a href="#control">Conditions, boucles et switch</a></li><li><a href="#functions">Fonctions et signatures typées</a></li><li><a href="#collections">Tableaux et dictionnaires</a></li><li><a href="#oop">Programmation orientée objet</a></li><li><a href="#interfaces">Interfaces et contrats</a></li><li><a href="#modules">Modules, foncteurs et types abstraits</a></li></ul></div><div class="nav-group"><h2>Projets et tests</h2><ul><li><a href="#imports">Projets, imports et isolation</a></li><li><a href="#dependencies">Gestion des dépendances</a></li><li><a href="#testing">OWUnit et tests</a></li><li><a href="#exceptions">Exceptions et assertions</a></li><li><a href="#builtins">Fonctions intégrées et bibliothèque standard</a></li></ul></div><div class="nav-group"><h2>Applications</h2><ul><li><a href="#files">Sauvegarde et JSON</a></li><li><a href="#database">Tables de données intégrées</a></li><li><a href="#http">Serveur HTTP et routes</a></li><li><a href="#ui">Interfaces web et fenêtres natives</a></li><li><a href="#audio">Audio, micro et reconnaissance vocale</a></li></ul></div><div class="nav-group"><h2>LLVM natif</h2><ul><li><a href="#native">Présentation de la compilation native LLVM</a></li><li><a href="#native-arrays">Chaînes, tableaux natifs et gestion mémoire</a></li><li><a href="#native-maps">Dictionnaires natifs et parcours ordonné</a></li><li><a href="#native-modules">Modules et foncteurs en natif</a></li><li><a href="#packaging">Distribuer une application OW</a></li></ul></div><div class="nav-group"><h2>Pour aller plus loin</h2><ul><li><a href="#ide">OwIDE et OWler-IDE</a></li><li><a href="#examples">Exemples exécutables</a></li><li><a href="#limits">Compatibilité et limites</a></li><li><a href="#troubleshooting">Résolution des problèmes</a></li><li><a href="#ecosystem">Écosystème OW</a></li><li><a href="#cheatsheet">Aide-mémoire</a></li></ul></div></nav><div class="side-footer">Documentation liée à <a href="https://github.com/OW-Programing-Language/ow-lang">ow-lang</a><p>L'interpréteur possède plus de fonctionnalités que le backend LLVM.</p></div></aside>
+<div class="content-shell"><div class="content"><div class="topline"><span>OW / Référence développeur</span><span class="topline-links"><a href="https://github.com/OW-Programing-Language/ow-lang">Sources</a><a href="https://github.com/OW-Programing-Language/ow-lang/releases">Télécharger</a><a href="https://github.com/OW-Programing-Language/owdocs">Contribuer</a></span></div><header class="hero"><span class="eyebrow">Langage de programmation open source</span><h1>Apprendre OW. Aller plus loin.</h1><p>Du premier programme à la syntaxe YAML aux fonctions typées, modules, tests, interfaces web et bureau, et à la compilation native expérimentale.</p><div class="actions"><a href="#quickstart" class="btn primary">Commencer</a><a href="https://github.com/OW-Programing-Language/ow-lang/releases" class="btn secondary">Télécharger OW</a></div></header><div class="status-grid"><div class="status-box"><strong>Interpréteur</strong><small>Couverture fonctionnelle étendue</small></div><div class="status-box"><strong>LLVM</strong><small>Sous-ensemble expérimental</small></div><div class="status-box"><strong>OWUnit</strong><small>Tests et erreurs</small></div><div class="status-box"><strong>Modules</strong><small>Contrats et dépendances</small></div></div><div class="empty-results" id="empty-results" role="status">Aucun sujet trouvé. Essayez un autre terme.</div><main id="main-content"><section class="section" id="overview"><span class="kicker">Documentation OW</span><h2>Présentation</h2><p><strong>OW</strong> est un langage de programmation open source à indentation, avec une syntaxe inspirée du YAML. Sa distribution Java comprend un interpréteur, un générateur LLVM pour une partie expérimentale du langage, une CLI et l'IDE intégré <strong>OwIDE</strong>. L'interpréteur exécute des programmes orientés objet, des modules, des API HTTP, des interfaces interactives et des tests.</p><div class="callout success"><strong>Les grandes nouveautés :</strong> fonctions typées, classes, imports, tableaux, dictionnaires, décimaux, interfaces, modules et foncteurs, OWUnit, exceptions, dépendances externes, persistance et nombreuses collections compilables en natif.</div><p>OW est du <em>code avec une apparence YAML</em>, pas un lecteur de fichiers de configuration YAML. Utilisez <code>ow run</code> pour profiter du plus grand nombre de fonctionnalités.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/README.md" target="_blank" rel="noopener noreferrer">README.md</a></div></section>
+<section class="section" id="install"><span class="kicker">Documentation OW</span><h2>Installation</h2><p>Téléchargez OW sur <a href="https://github.com/OW-Programing-Language/ow-lang/releases">GitHub Releases</a>. Les versions Windows avec installateur ou archive portable peuvent inclure leur propre runtime Java. Les distributions JVM nécessitent Java 17 ou supérieur.</p><pre><code>ow version
+ow help
+ow ide
+ow run examples/oop_demo.ow</code></pre><p>Pour compiler le projet à partir des sources, installez JDK 17+ et Maven :</p><pre><code>git clone https://github.com/OW-Programing-Language/ow-lang.git
+cd ow-lang
+mvn clean package
+java -jar target/OwIDE.jar help</code></pre><div class="callout warning">L'ancien lien <code>downloads/OwIDE.jar</code> de la documentation ne garantissait pas un fichier disponible : utilisez les assets GitHub Releases. La compilation native avec <code>ow build</code> demande également Clang/LLVM ou Zig.</div><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/INSTALL.md" target="_blank" rel="noopener noreferrer">INSTALL.md</a></div></section>
+<section class="section" id="quickstart"><span class="kicker">Documentation OW</span><h2>Premier programme</h2><p>Enregistrez ce code dans <code>hello.ow</code>. Le bloc <code>main:</code> est le point d'entrée, et <code>fn</code> déclare une fonction réutilisable :</p><pre><code>fn greet(name: string):
+  returns: string
+  return: "Hello, " + name + "!"
+
+main:
+  set who: "OW"
+  print: greet(who)</code></pre><pre><code>ow run hello.ow
+# Hello, OW!</code></pre><p>Utilisez une indentation cohérente de deux espaces pour les blocs imbriqués. <code>#</code> débute un commentaire.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/examples/yaml_signatures.ow" target="_blank" rel="noopener noreferrer">yaml_signatures.ow</a></div></section>
+<section class="section" id="cli"><span class="kicker">Documentation OW</span><h2>Référence de la CLI</h2><table><tr><th>Commande</th><th>Fonction</th></tr><tr><td><code>ow file.ow</code>, <code>ow run file.ow</code></td><td>Exécuter avec l'interpréteur.</td></tr><tr><td><code>ow check file.ow</code></td><td>Vérifier modules et foncteurs sans exécuter <code>main</code>.</td></tr><tr><td><code>ow test file|dir [--filter name]</code></td><td>Exécuter les tests OW.</td></tr><tr><td><code>ow deps init|install|update|list</code></td><td>Gérer les dépendances de sources OW.</td></tr><tr><td><code>ow llvm file.ow [out.ll]</code></td><td>Générer du LLVM IR.</td></tr><tr><td><code>ow build file.ow [out]</code></td><td>Compiler en exécutable natif.</td></tr><tr><td><code>ow package file.ow [options]</code></td><td>Distribuer une application avec un runtime Java.</td></tr><tr><td><code>ow ide</code>, <code>ow version</code>, <code>ow help</code></td><td>IDE, version et aide.</td></tr></table><pre><code>ow check examples/module_calculus/main.ow
+ow test examples/owunit/CalculatorTest.ow
+ow llvm examples/native_map_iteration.ow target/maps.ll</code></pre><p>Équivalent Java : <code>java -jar OwIDE.jar run file.ow</code>.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/src/main/java/dev/oreo/Main.java" target="_blank" rel="noopener noreferrer">Main.java</a></div></section>
+<section class="section" id="syntax"><span class="kicker">Documentation OW</span><h2>Syntaxe et indentation</h2><p>OW combine les instructions <code>mot-clé: valeur</code> avec des blocs structurés par indentation. Pas de point-virgule ni d'accolades autour des blocs d'instructions.</p><pre><code># commentaire
+main:
+  set value: 2
+  if: value &gt; 1
+    print: "greater"
+  else:
+    print: "smaller"</code></pre><p>On peut déclarer au niveau supérieur <code>fn</code>, <code>class</code>, <code>enum</code>, <code>interface</code>, <code>model</code>, <code>module_type</code>, <code>module</code>, <code>functor</code>, <code>import</code> et <code>main:</code>. C'est le parseur OW, et non un parseur YAML, qui valide ces constructions.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/yaml-function-syntax.md" target="_blank" rel="noopener noreferrer">yaml-function-syntax.md</a></div></section>
+<section class="section" id="types"><span class="kicker">Documentation OW</span><h2>Types, variables et calculs</h2><p>L'interpréteur gère les entiers, flottants IEEE-754, chaînes, booléens, tableaux, dictionnaires/enregistrements, énumérations, objets et valeurs de modules. <code>set</code> déclare ou réaffecte une variable, avec un type optionnel.</p><pre><code>main:
+  set count int: 10
+  set label string: "score"
+  set enabled bool: true
+  print: label + ": " + str(count)
+  print: 7 / 2       # 3 (entier)
+  print: 7.0 / 2     # 3.5 (flottant)</code></pre><p>Opérateurs : <code>+ - * / == != &lt; &lt;= &gt; &gt;=</code>. La division de deux entiers reste entière ; un opérande flottant active le calcul décimal. Pour convertir, utilisez <code>int</code>, <code>floor</code>, <code>ceil</code> et <code>round</code>.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/floats.md" target="_blank" rel="noopener noreferrer">floats.md</a></div></section>
+<section class="section" id="control"><span class="kicker">Documentation OW</span><h2>Conditions, boucles et switch</h2><p>OW propose <code>if:</code>/<code>else:</code>, <code>else if</code>, <code>while:</code> et <code>switch:</code> avec <code>case</code>/<code>default:</code>. Un <code>case</code> peut contenir plusieurs valeurs.</p><pre><code>main:
+  set x: 2
+  switch: x
+    case 1:
+      print: "one"
+    case 2, 3:
+      print: "two or three"
+    default:
+      print: "other"
+  set i: 0
+  while: i &lt; 3
+    print: i
+    set i: i + 1</code></pre><p>En natif, ces structures ne fonctionnent que si leurs expressions sont compatibles avec le sous-ensemble LLVM pris en charge.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/examples/oop_demo.ow" target="_blank" rel="noopener noreferrer">oop_demo.ow</a></div></section>
+<section class="section" id="functions"><span class="kicker">Documentation OW</span><h2>Fonctions et signatures typées</h2><p>La syntaxe YAML recommandée utilise <code>nom: type</code> pour les paramètres et <code>returns: type</code> en première ligne du corps. <code>returns:</code> décrit la signature ; <code>return:</code> renvoie une valeur. <code>call:</code> ignore le résultat d'un appel.</p><pre><code>fn add(a: int, b: int):
+  returns: int
+  return: a + b
+
+main:
+  print: add(20, 22)</code></pre><p>Les anciennes formes <code>fn add(a int, b int) -&gt; int:</code> et <code>fn add(a, b):</code> restent valides. N'utilisez pas <code>-&gt; type</code> et <code>returns: type</code> ensemble sur la même fonction. La compilation native demande des types explicites pour les références aux tableaux, chaînes et dictionnaires.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/yaml-function-syntax.md" target="_blank" rel="noopener noreferrer">yaml-function-syntax.md</a><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/examples/yaml_signatures.ow" target="_blank" rel="noopener noreferrer">yaml_signatures.ow</a></div></section>
+<section class="section" id="collections"><span class="kicker">Documentation OW</span><h2>Tableaux et dictionnaires</h2><h3>Tableaux</h3><pre><code>main:
+  set scores: [4, 8, 12]
+  set scores[1]: 9
+  set zeros: array(3, 0)
+  print: scores[1]
+  print: len(zeros)</code></pre><h3>Dictionnaires et enregistrements</h3><p>Les maps utilisent des clés chaînes et préservent l'ordre d'insertion. Les clés simples sont accessibles avec <code>.champ</code> ; une clé inexistante accédée directement déclenche une erreur.</p><pre><code>main:
+  set profile: { name: "Ada", level: 3 }
+  set profile["level"]: 4
+  print: profile.name
+  print: map_get(profile, "missing", "default")
+  print: map_keys(profile)[0]</code></pre><p>Fonctions : <code>map_get</code> (valeur par défaut évaluée à la demande), <code>map_has</code>, <code>map_set</code>, <code>map_delete</code>, <code>map_keys</code>, <code>map_values</code>, <code>map_size</code>. Les types de valeurs natifs sont plus limités que ceux de l'interpréteur.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/dictionaries.md" target="_blank" rel="noopener noreferrer">dictionaries.md</a></div></section>
+<section class="section" id="oop"><span class="kicker">Documentation OW</span><h2>Programmation orientée objet</h2><p>Les classes disposent de champs, d'un constructeur <code>new</code>, de méthodes et de <code>this</code>. OW prend aussi en charge les membres <code>private</code>/<code>public</code>, l'héritage, la redéfinition, le dispatch dynamique, les énumérations et <code>to_string()</code>.</p><pre><code>class Person:
+  field name
+  fn new(value):
+    set this.name: value
+  fn hello():
+    return: "Hi " + this.name
+
+class Friend(Person):
+  fn hello():
+    return: "Hey " + this.name
+
+main:
+  set friend: new Friend("Ada")
+  print: friend.hello()</code></pre><p>La POO complète fonctionne dans l'interpréteur ; les classes et graphes d'objets génériques ne sont pas encore compilés directement par LLVM.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/examples/oop_demo.ow" target="_blank" rel="noopener noreferrer">oop_demo.ow</a></div></section>
+<section class="section" id="interfaces"><span class="kicker">Documentation OW</span><h2>Interfaces et contrats</h2><p>Une <code>interface</code> définit les méthodes publiques attendues. OW vérifie les implémentations avant <code>main:</code> : méthodes absentes, visibilité incorrecte, nombre d'arguments, signatures typées incompatibles et cycles d'héritage.</p><pre><code>interface Storage:
+  fn put(key: string, value: int):
+    returns: bool
+
+class MemoryStorage(Storage):
+  fn put(key: string, value: int):
+    returns: bool
+    return: true</code></pre><p>Les types sont optionnels mais vérifiés lorsqu'ils sont déclarés. Ce système de contrats ne remplace pas une inférence statique complète de tout le programme.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/src/test/java/dev/oreo/InterfaceContractTest.java" target="_blank" rel="noopener noreferrer">InterfaceContractTest.java</a></div></section>
+<section class="section" id="modules"><span class="kicker">Documentation OW</span><h2>Modules, foncteurs et types abstraits</h2><p>OW implémente une partie testée du calcul de modules inspiré d'OCaml : <code>module_type</code>, <code>module</code>, <code>functor</code>, <code>functor_gen</code>, compatibilité structurelle des signatures, types opaques ou manifestes, partage via <code>with_type</code>, alias, modules imbriqués, <code>include</code>, foncteurs d'ordre supérieur et modules de première classe (<code>pack</code>/<code>unpack</code>).</p><pre><code>module_type COUNTER:
+  fn get() -&gt; int
+
+module Answer: COUNTER
+  fn get() -&gt; int:
+    return: 42
+
+main:
+  print: Answer.get()</code></pre><p>Les exports publics sont limités à la signature déclarée. Les foncteurs applicatifs conservent l'identité des types abstraits à partir de chemins stables ; les foncteurs génératifs créent de nouvelles identités. <code>ow check</code> vérifie les contrats avant exécution.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/native-modules.md" target="_blank" rel="noopener noreferrer">native-modules.md</a><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/examples/module_calculus/README.md" target="_blank" rel="noopener noreferrer">README.md</a></div></section>
+<section class="section" id="imports"><span class="kicker">Documentation OW</span><h2>Projets, imports et isolation</h2><p><code>import "chemin/relatif.ow"</code> importe un autre fichier OW relativement au fichier courant. Le point d'entrée peut contenir <code>main:</code> pendant que les classes et utilitaires vivent dans d'autres fichiers. Le chargeur détecte les cycles et imports manquants.</p><pre><code># src/main.ow
+import "api/Math.ow"
+
+main:
+  print: add(5, 6)</code></pre><p>Les dossiers <code>api/</code> et <code>infra/</code> imposent des frontières : une API ne doit pas importer une infrastructure, et un module ne peut pas importer directement l'implémentation privée d'un autre. La racine de composition peut assembler les implémentations.</p><pre><code>shop/
+  main.ow
+  inventory/api/InventoryApi.ow
+  inventory/infra/Inventory.ow
+  orders/api/OrdersApi.ow
+  orders/infra/Orders.ow</code></pre><p>Cette convention aide notamment les projets utilisant le framework externe <a href="https://github.com/OW-Programing-Language/flOW---OW-Modular-Framework">flOW</a>.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/module-boundaries.md" target="_blank" rel="noopener noreferrer">module-boundaries.md</a></div></section>
+<section class="section" id="dependencies"><span class="kicker">Documentation OW</span><h2>Gestion des dépendances</h2><p>Un fichier <code>dependencies.yml</code> à la racine déclare des dépôts Git et leurs bibliothèques de sources OW, avec des alias. <code>dependencies.lock.yml</code> verrouille les commits exacts ; le cache local est dans <code>.ow/deps/</code>.</p><pre><code>format: 1
+repositories:
+  - id: github
+    url: https://github.com
+dependencies:
+  - name: math
+    repository: github
+    path: OW-Programing-Language/ow-math-questions
+    version: c22d01cfee6be18d96d4c55b95b7e79892bca9f6</code></pre><pre><code>ow deps init
+ow deps install
+ow deps list
+ow deps update
+# import "@math/src/MathQuestions.ow"</code></pre><p>Versionnez le manifeste et le lockfile, mais ignorez <code>.ow/deps/</code>. Les commandes <code>run</code>, <code>check</code>, <code>llvm</code>, <code>build</code> et <code>package</code> résolvent le manifeste du projet. Il ne s'agit pas d'un gestionnaire Maven, et les dépendances transitives ou contraintes semver ne sont pas encore prises en charge.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/dependencies.md" target="_blank" rel="noopener noreferrer">dependencies.md</a><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/examples/dependencies-demo/dependencies.yml" target="_blank" rel="noopener noreferrer">dependencies.yml</a></div></section>
+<section class="section" id="testing"><span class="kicker">Documentation OW</span><h2>OWUnit et tests</h2><p>L'interpréteur reconnaît <code>@Test</code>, <code>@BeforeEach</code> et <code>@AfterEach</code> sur les fonctions de test sans argument et les méthodes de classes sans argument. Aucun bloc <code>main:</code> n'est requis ; un nouvel objet est créé pour chaque test de classe.</p><pre><code>class CalculatorTest:
+  field value
+  @BeforeEach
+  fn setup():
+    set this.value: 2
+  @Test
+  fn addsNumbers():
+    call: assert(this.value + 3 == 5, "wrong result")
+  @AfterEach
+  fn cleanup():
+    set this.value: 0</code></pre><pre><code>ow test examples/owunit/CalculatorTest.ow
+ow test tests/
+ow test tests/CalculatorTest.ow --filter CalculatorTest.addsNumbers</code></pre><p>La découverte récursive cherche les fichiers terminés par <code>Test.ow</code> ou <code>_test.ow</code>. Un échec entraîne un code de sortie non nul. Le dépôt séparé <a href="https://github.com/OW-Programing-Language/OWUnit">OWUnit</a> fournit d'autres assertions. Les annotations de test restent réservées à l'interpréteur.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/testing-and-exceptions.md" target="_blank" rel="noopener noreferrer">testing-and-exceptions.md</a></div></section>
+<section class="section" id="exceptions"><span class="kicker">Documentation OW</span><h2>Exceptions et assertions</h2><p><code>throw:</code> lève une exception OW. Un bloc <code>try:</code> nécessite <code>catch nom:</code> et/ou <code>finally:</code>. La variable du catch reçoit le message d'erreur ; <code>finally</code> s'exécute également lors d'un retour ou d'une exception. Les erreurs <code>assert(...)</code> sont interceptables dans l'interpréteur.</p><pre><code>main:
+  try:
+    throw: "bad input"
+  catch message:
+    print: "Caught " + message
+  finally:
+    print: "cleanup"</code></pre><p>Le backend LLVM ne prend pas encore en charge <code>try/catch/finally</code>. Les erreurs natives d'indexation ou de clé absente peuvent arrêter le processus.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/testing-and-exceptions.md" target="_blank" rel="noopener noreferrer">testing-and-exceptions.md</a></div></section>
+<section class="section" id="builtins"><span class="kicker">Documentation OW</span><h2>Fonctions intégrées et bibliothèque standard</h2><table><tr><th>Catégorie</th><th>Fonctions de l'interpréteur</th></tr><tr><td>Général</td><td><code>input</code>, <code>str</code>, <code>int</code>, <code>len</code>, <code>array</code>, <code>assert</code></td></tr><tr><td>Texte</td><td><code>upper</code>, <code>lower</code>, <code>trim</code>, <code>substr</code>, <code>index_of</code>, <code>contains</code>, <code>replace</code>, <code>split</code>, <code>char_at</code></td></tr><tr><td>Maths</td><td><code>abs</code>, <code>min</code>, <code>max</code>, <code>pow</code>, <code>sqrt</code>, <code>clamp</code>, <code>mod</code>, <code>rand</code>, <code>floor</code>, <code>ceil</code>, <code>round</code></td></tr><tr><td>Temps</td><td><code>time_ms</code>, <code>now_ms</code>, <code>sleep</code></td></tr><tr><td>Sérialisation</td><td><code>json</code>, <code>json_parse</code>, <code>save</code>, <code>load</code>, <code>exists</code></td></tr><tr><td>Maps</td><td><code>map_get</code>, <code>map_has</code>, <code>map_set</code>, <code>map_delete</code>, <code>map_keys</code>, <code>map_values</code>, <code>map_size</code></td></tr></table><pre><code>main:
+  set text: upper(trim("  ow  "))
+  print: text
+  print: pow(2, 5)
+  print: split("red,blue", ",")[1]</code></pre><p>Toutes les fonctions intégrées ne sont pas compilables en LLVM. Ce tableau décrit d'abord les fonctionnalités de l'interpréteur.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/strings.md" target="_blank" rel="noopener noreferrer">strings.md</a><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/math.md" target="_blank" rel="noopener noreferrer">math.md</a><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/timing.md" target="_blank" rel="noopener noreferrer">timing.md</a></div></section>
+<section class="section" id="files"><span class="kicker">Documentation OW</span><h2>Sauvegarde et JSON</h2><p><code>save(path, value)</code> écrit un fichier JSON en créant les dossiers parents. <code>load(path)</code> le relit ou renvoie <code>0</code> s'il manque ; <code>exists(path)</code> vérifie sa présence. <code>json</code> et <code>json_parse</code> convertissent les données en mémoire.</p><pre><code>main:
+  set path: "save/player.json"
+  if: exists(path)
+    set player: load(path)
+    print: player.name
+  else:
+    call: save(path, {name: "Ada", level: 1})</code></pre><p>Les chemins relatifs sont résolus depuis le répertoire de travail, ou depuis les ressources de l'application lors de l'empaquetage.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/save-load.md" target="_blank" rel="noopener noreferrer">save-load.md</a></div></section>
+<section class="section" id="database"><span class="kicker">Documentation OW</span><h2>Tables de données intégrées</h2><p>Une déclaration <code>model</code> crée une table sauvegardée automatiquement dans <code>ow-data.json</code>, sans serveur SQL. Vous pouvez changer l'emplacement avec <code>OW_DB_PATH</code> ou <code>ow.db.path</code>.</p><pre><code>model Task:
+  title string
+  done bool
+
+main:
+  save Task: {title: "Write docs", done: false}
+  set open: find Task where done == false
+  print: len(open)
+  delete Task where done == true</code></pre><p><code>find Model</code> lit les lignes, <code>find Model where condition</code> filtre, <code>save Model:</code> insère avec un identifiant automatique et <code>delete Model</code> supprime des enregistrements.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/examples/db_demo.ow" target="_blank" rel="noopener noreferrer">db_demo.ow</a></div></section>
+<section class="section" id="http"><span class="kicker">Documentation OW</span><h2>Serveur HTTP et routes</h2><p>L'interpréteur peut exposer des routes HTTP sans serveur externe. Combinez <code>route</code>, <code>respond:</code> et <code>serve:</code> pour créer une API JSON ou texte.</p><pre><code>main:
+  route "GET /health":
+    respond: {ok: true}
+  route "GET /hello/:name":
+    respond: {greeting: param("name")}
+  serve: 8080</code></pre><p>Fonctions utiles : <code>param</code>, <code>query</code>, <code>body</code>, <code>body_json</code> et <code>response(status, payload)</code>. Les informations de requête existent aussi dans <code>req</code>. Consultez <a href="https://github.com/OW-Programing-Language/night">Night</a> pour un framework web OW distinct et plus haut niveau.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/examples/api_demo.ow" target="_blank" rel="noopener noreferrer">api_demo.ow</a></div></section>
+<section class="section" id="ui"><span class="kicker">Documentation OW</span><h2>Interfaces web et fenêtres natives</h2><p>OW peut afficher le même arbre de composants dans un navigateur (<code>ui_run</code> ou <code>ui_run_web</code>) et dans une fenêtre de bureau (<code>ui_run_native</code>). Les boutons et champs de saisie appellent des fonctions OW.</p><pre><code>fn view():
+  return: ui_col([
+    ui_heading("Counter"),
+    ui_text("Count " + str(count)),
+    ui_button("+1", "increment")
+  ])
+fn increment():
+  set count: count + 1
+main:
+  set count int: 0
+  call: ui_run("view", "OW Counter")</code></pre><p>Composants : <code>ui_heading</code>, <code>ui_text</code>, <code>ui_button</code>, <code>ui_input</code>, <code>ui_image</code>, <code>ui_bar</code>, <code>ui_space</code>, <code>ui_card</code>, <code>ui_backdrop</code>, <code>ui_row</code>, <code>ui_col</code>, <code>ui_grid</code> et <code>ui_disc</code>. <code>ui_stop</code> arrête l'interface.</p><p><code>OW_UI_MODE</code> sélectionne le moteur ; <code>OW_UI_NO_BROWSER=1</code> évite l'ouverture automatique du navigateur.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/ui-image-input.md" target="_blank" rel="noopener noreferrer">ui-image-input.md</a><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/examples/connect4_ui.ow" target="_blank" rel="noopener noreferrer">connect4_ui.ow</a></div></section>
+<section class="section" id="audio"><span class="kicker">Documentation OW</span><h2>Audio, micro et reconnaissance vocale</h2><table><tr><th>Fonction</th><th>Utilisation</th></tr><tr><td><code>audio_play(path)</code></td><td>Jouer un son ponctuel.</td></tr><tr><td><code>audio_music(path)</code></td><td>Musique de fond en boucle.</td></tr><tr><td><code>audio_stop()</code></td><td>Arrêter la musique.</td></tr><tr><td><code>mic_level(ms)</code></td><td>Volume sonore maximal du micro, de 0 à 100.</td></tr><tr><td><code>mic_transcribe(model, ms)</code></td><td>Reconnaissance vocale locale avec Vosk.</td></tr></table><pre><code>main:
+  call: audio_play("assets/click.wav")
+  print: mic_level(300)</code></pre><p>La JVM prend en charge notamment WAV, AIFF et AU. Il faut télécharger et fournir séparément les modèles Vosk. L'accès au matériel dépend des autorisations du système. Ces fonctions concernent l'interpréteur.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/audio-and-mic.md" target="_blank" rel="noopener noreferrer">audio-and-mic.md</a></div></section>
+<section class="section" id="native"><span class="kicker">Documentation OW</span><h2>Présentation de la compilation native LLVM</h2><p><code>ow llvm</code> génère du LLVM IR et <code>ow build</code> produit un exécutable autonome pour les constructions compatibles, sans JVM nécessaire à l'exécution. Le <em>compilateur</em> continue de dépendre de Java. Le sous-ensemble natif reste <strong>expérimental et incomplet</strong>.</p><pre><code>ow llvm examples/native_dynamic_strings.ow target/strings.ll
+clang target/strings.ll -o target/strings
+./target/strings</code></pre><p>Le support actuel couvre notamment les opérations entières, les fonctions typées, les chaînes UTF-8, les tableaux d'entiers/chaînes avec comptage de références, des dictionnaires spécialisés, des dictionnaires imbriqués, l'itération ordonnée et certains appels statiques à des modules/foncteurs entiers.</p><div class="callout warning">Les classes générales, flottants, OWUnit, try/catch, modèles de données, serveurs HTTP et interfaces graphiques ne disposent pas encore d'un support natif complet.</div><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/native-arrays.md" target="_blank" rel="noopener noreferrer">native-arrays.md</a><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/native-strings.md" target="_blank" rel="noopener noreferrer">native-strings.md</a></div></section>
+<section class="section" id="native-arrays"><span class="kicker">Documentation OW</span><h2>Chaînes, tableaux natifs et gestion mémoire</h2><p>Les chaînes natives utilisent UTF-8 et prennent en charge la concaténation <code>string + string</code>, les comparaisons de contenu et <code>len(string)</code> avec la sémantique Java UTF-16. Les chaînes contenant un octet NUL intégré ne sont pas prises en charge.</p><pre><code>fn make(size: int):
+  returns: string_array
+  return: array(size, "Hello " + "OW")
+
+main:
+  set names: make(3)
+  print: names[0]
+  print: len(names)</code></pre><p>Les types <code>array</code> (entiers i32) et <code>string_array</code> gèrent les indices, mutations, allocations dynamiques, paramètres/retours typés et le comptage de références ARC. Les tableaux de chaînes libèrent aussi les chaînes contenues lorsqu'ils n'ont plus de propriétaire. <code>[]</code> crée un tableau entier vide ; pour un tableau natif de chaînes vide, utilisez <code>array(0, "")</code>.</p><p>Les compteurs ne sont pas atomiques, l'ABI reste instable et les erreurs d'indices peuvent arrêter l'exécutable natif.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/native-array-memory.md" target="_blank" rel="noopener noreferrer">native-array-memory.md</a><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/native-array-functions.md" target="_blank" rel="noopener noreferrer">native-array-functions.md</a><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/native-string-arrays.md" target="_blank" rel="noopener noreferrer">native-string-arrays.md</a><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/native-dynamic-strings.md" target="_blank" rel="noopener noreferrer">native-dynamic-strings.md</a></div></section>
+<section class="section" id="native-maps"><span class="kicker">Documentation OW</span><h2>Dictionnaires natifs et parcours ordonné</h2><p>LLVM dispose de maps à clés chaînes : <code>int_map</code>, <code>string_map</code> et <code>mixed_map</code> (valeurs typées entiers, chaînes ou maps imbriquées). Une table de hachage UTF-8 redimensionnable offre une recherche moyenne en O(1).</p><pre><code>main:
+  set cfg: {name: "OW", version: 6}
+  set keys: map_keys(cfg)
+  set values: map_values(cfg)
+  print: keys[0]
+  print: cfg["name"]</code></pre><p><code>map_keys</code> et <code>map_values</code> renvoient des <strong>instantanés propriétaires dans l'ordre d'insertion</strong>. Modifier une clé ne change pas sa position ; la supprimer puis la recréer la déplace à la fin. Les valeurs d'une <code>mixed_map</code> sont regroupées dans un <code>mixed_array</code>.</p><p>Les maps imbriquées utilisent ARC avec prévention des cycles. Le natif n'accepte pas encore les objets arbitraires, flottants, valeurs nulles, tableaux en valeur de map ni toutes les opérations JSON.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/native-map-iteration.md" target="_blank" rel="noopener noreferrer">native-map-iteration.md</a><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/native-nested-maps.md" target="_blank" rel="noopener noreferrer">native-nested-maps.md</a><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/native-hash-dictionaries.md" target="_blank" rel="noopener noreferrer">native-hash-dictionaries.md</a></div></section>
+<section class="section" id="native-modules"><span class="kicker">Documentation OW</span><h2>Modules et foncteurs en natif</h2><p>Le backend LLVM peut compiler certains appels statiquement résolus à des modules ou foncteurs entiers, notamment des variantes qualifiées, opaques ou empaquetées documentées. Il ne constitue pas un compilateur de modules OCaml complet.</p><pre><code>ow check examples/module_calculus/native_llvm.ow
+ow llvm examples/module_calculus/native_llvm.ow target/native-modules.ll</code></pre><p>Un fichier validé par <code>ow check</code> n'est pas forcément compilable avec <code>ow llvm</code>. Les modules dynamiques de première classe et les foncteurs arbitraires restent principalement interprétés.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/native-modules.md" target="_blank" rel="noopener noreferrer">native-modules.md</a><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/examples/module_calculus/native_llvm.ow" target="_blank" rel="noopener noreferrer">native_llvm.ow</a></div></section>
+<section class="section" id="packaging"><span class="kicker">Documentation OW</span><h2>Distribuer une application OW</h2><table><tr><th>Commande</th><th>Résultat</th></tr><tr><td><code>ow run</code></td><td>Interpréteur avec toutes les fonctions documentées.</td></tr><tr><td><code>ow build</code></td><td>Binaire natif, limité au sous-ensemble LLVM.</td></tr><tr><td><code>ow package</code></td><td>Application interprétée avec son runtime Java intégré.</td></tr></table><pre><code>ow package src/main.ow --name MyGame --type gui --out dist
+ow package src/main.ow --name MyAPI --type web --out dist
+ow package src/main.ow --name MyTool --type console --out dist</code></pre><p>L'empaquetage utilise <code>jpackage</code> du JDK. Il peut inclure les sources, dépendances, assets et modèles attendus. Distribuez le <em>dossier complet</em>. Un JDK complet est requis à la construction et la génération MSI Windows peut nécessiter WiX.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/INSTALL.md" target="_blank" rel="noopener noreferrer">INSTALL.md</a></div></section>
+<section class="section" id="ide"><span class="kicker">Documentation OW</span><h2>OwIDE et OWler-IDE</h2><p>L'<strong>OwIDE</strong> fourni avec <code>ow-lang</code> est un éditeur Java de bureau comprenant navigation de projet, exécution/compilation et boutons de lancement des interfaces web ou natives. Lancez-le avec <code>ow ide</code> ou via le programme distribué dans Releases.</p><p><a href="https://github.com/OW-Programing-Language/OWler-IDE">OWler-IDE</a> est un projet <strong>distinct</strong>, basé sur Tauri/Rust/React. Ses fonctionnalités, installateurs et versions doivent être vérifiés dans son propre dépôt, sans les confondre avec l'OwIDE Java fourni par le langage.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/src/main/java/dev/oreo/Ide.java" target="_blank" rel="noopener noreferrer">Ide.java</a></div></section>
+<section class="section" id="examples"><span class="kicker">Documentation OW</span><h2>Exemples exécutables</h2><table><tr><th>Exemple</th><th>Contenu</th></tr><tr><td><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/examples/oop_demo.ow" target="_blank" rel="noopener noreferrer">Démo POO</a></td><td>Classes, interfaces, héritage, enums, switch.</td></tr><tr><td><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/examples/yaml_signatures.ow" target="_blank" rel="noopener noreferrer">Signatures YAML</a></td><td>Fonctions typées.</td></tr><tr><td><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/examples/module_calculus/advanced_module_calculus.ow" target="_blank" rel="noopener noreferrer">Modules avancés</a></td><td>Modules, foncteurs et packages.</td></tr><tr><td><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/examples/owunit/CalculatorTest.ow" target="_blank" rel="noopener noreferrer">Exemple OWUnit</a></td><td>Tests et exceptions.</td></tr><tr><td><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/examples/native_map_iteration.ow" target="_blank" rel="noopener noreferrer">Maps natives</a></td><td>Parcours dans l'ordre d'insertion.</td></tr><tr><td><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/examples/native_nested_maps.ow" target="_blank" rel="noopener noreferrer">Maps imbriquées</a></td><td>Propriété mémoire native.</td></tr><tr><td><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/examples/connect4_ui.ow" target="_blank" rel="noopener noreferrer">Puissance 4 UI</a></td><td>Interaction graphique.</td></tr><tr><td><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/examples/dependencies-demo/main.ow" target="_blank" rel="noopener noreferrer">Dépendances</a></td><td>Imports externes versionnés.</td></tr></table><p>Ces fichiers du dépôt sont les références pratiques pour reproduire la syntaxe.</p></section>
+<section class="section" id="limits"><span class="kicker">Documentation OW</span><h2>Compatibilité et limites</h2><table><tr><th>Fonctionnalité</th><th>Interpréteur</th><th>LLVM natif</th></tr><tr><td>Classes, interfaces, héritage</td><td>Oui</td><td>Objets généraux : non</td></tr><tr><td>Flottants</td><td>Oui</td><td>Pas dans le sous-ensemble pris en charge</td></tr><tr><td>Tableaux entiers/chaînes</td><td>Oui</td><td>Sous-ensemble typé</td></tr><tr><td>Dictionnaires et maps imbriquées</td><td>Oui</td><td>Types de valeurs documentés</td></tr><tr><td>Modules et foncteurs</td><td>Oui (partie testée)</td><td>Certains appels statiques entiers</td></tr><tr><td>OWUnit, try/catch/finally</td><td>Oui</td><td>Non</td></tr><tr><td>Modèles, HTTP, UI, audio</td><td>Oui</td><td>Non</td></tr><tr><td>Dépendances de sources externes</td><td>Oui</td><td>Si leur code est compilable</td></tr></table><p>Les ABI natives des collections évoluent régulièrement. Les compteurs ARC ne sont pas atomiques, les cycles de maps imbriquées sont rejetés plutôt que collectés et il faut recompiler les anciens binaires après modification de l'ABI.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/native-modules.md" target="_blank" rel="noopener noreferrer">native-modules.md</a><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/docs/native-nested-maps.md" target="_blank" rel="noopener noreferrer">native-nested-maps.md</a></div></section>
+<section class="section" id="troubleshooting"><span class="kicker">Documentation OW</span><h2>Résolution des problèmes</h2><ul><li><strong><code>ow</code> introuvable :</strong> ajoutez le répertoire <code>bin/</code> au <code>PATH</code>, ou exécutez le JAR.</li><li><strong>Version Java incompatible :</strong> utilisez Java 17+ ou un installateur avec runtime inclus.</li><li><strong>Compilateur natif absent :</strong> installez LLVM/Clang ou Zig ; <code>ow run</code> n'en a pas besoin.</li><li><strong>Type non pris en charge par LLVM :</strong> testez avec l'interpréteur et consultez la documentation précise du type natif.</li><li><strong>Import <code>@alias</code> introuvable :</strong> lancez <code>ow deps install</code> et vérifiez le manifeste/lockfile.</li><li><strong>Test non découvert :</strong> nommez le fichier avec le suffixe <code>Test.ow</code> ou <code>_test.ow</code>.</li><li><strong>Erreur de frontière d'import :</strong> utilisez <code>api/</code> plutôt que l'<code>infra/</code> privée d'un autre module.</li><li><strong>Modèle vocal absent :</strong> téléchargez un modèle Vosk et fournissez son dossier.</li></ul><p>Pour signaler un bug, joignez un petit programme reproduisant l'erreur et précisez si le problème apparaît avec <code>ow run</code>, <code>ow check</code> ou <code>ow llvm</code>.</p><div class="links"><a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/INSTALL.md" target="_blank" rel="noopener noreferrer">INSTALL.md</a></div></section>
+<section class="section" id="ecosystem"><span class="kicker">Documentation OW</span><h2>Écosystème OW</h2><p>Ces projets open source sont des <strong>dépôts indépendants</strong> : ils ne sont pas tous fournis automatiquement avec chaque version du langage.</p><ul><li><a href="https://github.com/OW-Programing-Language/ow-lang">ow-lang</a> — interpréteur, compilateur, CLI, OwIDE.</li><li><a href="https://github.com/OW-Programing-Language/OWUnit">OWUnit</a> — bibliothèque de tests.</li><li><a href="https://github.com/OW-Programing-Language/flOW---OW-Modular-Framework">flOW</a> — framework modulaire.</li><li><a href="https://github.com/OW-Programing-Language/night">Night</a> — framework web.</li><li><a href="https://github.com/OW-Programing-Language/OWler-IDE">OWler-IDE</a> — IDE de bureau Tauri.</li><li><a href="https://github.com/OW-Programing-Language/owdocs">owdocs</a> — ce site.</li></ul><p>Le <a href="https://github.com/OW-Programing-Language/ow-lang/issues/16">ticket #16</a> suit les fonctionnalités de modules encore à développer.</p></section>
+<section class="section" id="cheatsheet"><span class="kicker">Documentation OW</span><h2>Aide-mémoire</h2><pre><code>fn add(a: int, b: int):
+  returns: int
+  return: a + b
+
+main:
+  set values: [1, 2, 3]
+  set values[0]: 5
+  set cfg: {mode: "dev", count: 2}
+  if: map_has(cfg, "mode")
+    print: cfg.mode
+  print: add(values[0], cfg.count)
+
+# ow run app.ow
+# ow check app.ow
+# ow test tests/
+# ow deps install
+# ow llvm app.ow out.ll
+# ow build app.ow out.exe
+# ow package app.ow --name MyApp --type gui</code></pre><p>Recherchez un mot-clé dans la barre latérale (<code>/</code> pour la sélectionner). Les liens sous chaque section mènent aux guides détaillés et aux exemples du dépôt.</p></section><footer class="site-footer">Langage OW · <a href="https://github.com/OW-Programing-Language/ow-lang/blob/main/LICENSE">Licence MIT</a> · L'interpréteur reste la référence des fonctionnalités complètes du runtime.</footer></main></div></div></div><script src="docs.js" defer></script></body></html>

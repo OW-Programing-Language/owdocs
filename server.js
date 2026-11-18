@@ -4,7 +4,8 @@ const http = require("http");
 
 const host = "0.0.0.0";
 const port = Number(process.env.PORT || process.env.SERVER_PORT || 3000);
-const docsRoot = path.join(__dirname, "owdocs");
+// This repository keeps index.html, fr.html and assets at its root.
+const docsRoot = path.resolve(__dirname);
 
 const contentTypes = {
   ".css": "text/css; charset=utf-8",
@@ -35,18 +36,22 @@ function internalError(res) {
 }
 
 function getFilePath(urlPath) {
-  let relativePath = urlPath.replace(/^\/owdocs\/?/, "");
-  if (relativePath === "") {
-    relativePath = "index.html";
-  }
-
-  const safePath = path.normalize(relativePath).replace(/^(\.\.(\/|\\|$))+/, "");
-  const absolutePath = path.join(docsRoot, safePath);
-
-  if (!absolutePath.startsWith(docsRoot)) {
+  const relativeUrl = urlPath === "/owdocs" || urlPath === "/owdocs/"
+    ? "index.html"
+    : urlPath.slice("/owdocs/".length);
+  let decoded;
+  try {
+    decoded = decodeURIComponent(relativeUrl);
+  } catch {
     return null;
   }
-
+  if (decoded.includes("\\") || decoded.includes("\0")) return null;
+  const absolutePath = path.resolve(docsRoot, decoded);
+  const relativePath = path.relative(docsRoot, absolutePath);
+  if (relativePath === ".." || relativePath.startsWith(".." + path.sep) ||
+      path.isAbsolute(relativePath)) return null;
+  // Do not expose git metadata, CI or dotfiles from the documentation server.
+  if (relativePath.split(path.sep).some(part => part.startsWith("."))) return null;
   return absolutePath;
 }
 
@@ -68,7 +73,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  if (!url.pathname.startsWith("/owdocs")) {
+  if (url.pathname !== "/owdocs" && !url.pathname.startsWith("/owdocs/")) {
     notFound(res);
     return;
   }
@@ -120,3 +125,5 @@ const server = http.createServer((req, res) => {
 server.listen(port, host, () => {
   console.log(`Ow docs server listening on ${host}:${port}`);
 });
+
+module.exports = server;
